@@ -1,17 +1,17 @@
 #include "shell.h"
 
-void execute_command(char **args)
+void execute_command(char *cmd, char **args)
 {
-	char *path = NULL,  command_path[PATH_MAX] = {0};
+	/*char *path = NULL,  command_path[PATH_MAX] = {0};
 	char *dir = NULL, *copy_path = NULL;
-	size_t dir_len, arg_len;
-	char *delim = " \t", *token = NULL;
+	size_t dir_len, arg_len;*/
+	/*char *delim = " \t", *token = NULL;*/
 	/*	char *com[MAX_COMMAND_ARGS] = strdup(*args);*/
-	int i = 0, status = 0;
-	char *argm[100];
+	int status = 0;
+	/*char *argm[100];*/
 	pid_t pid;
 
-	if (access(args[0], F_OK) == 0)
+	if (access(cmd, F_OK) == 0)
 	{
 		pid = fork();
 		if (pid < 0)
@@ -21,14 +21,14 @@ void execute_command(char **args)
 		}
 		else if (pid == 0)
 		{
-			token = strtok(args[0], delim);
+		/*	token = strtok(args[0], delim);
 			while (token != NULL)
 			{
 				argm[i++] = token;
 				token = strtok(NULL, delim);
 			}
-			argm[i] = NULL;
-			if (execve(argm[0], argm, environ) == -1)
+			argm[i] = NULL;*/
+			if (execve(cmd, args, environ) == -1)
 			{
 				perror("execve");
 				exit(EXIT_FAILURE);
@@ -39,7 +39,8 @@ void execute_command(char **args)
 			waitpid(pid, &status, 0);
 		}
 	}
-	else
+}
+/*	else
 	{
 		path = getenv("PATH");
 		copy_path = strdup(path);
@@ -68,4 +69,4 @@ void execute_command(char **args)
 		fprintf(stderr, "%s: command not found\n", args[0]);
 		exit(EXIT_FAILURE);
 	}
-}
+}*/

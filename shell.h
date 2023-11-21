@@ -15,8 +15,8 @@
 extern char **environ;
 
 void show_prompt(void);
-void read_input(char *input);
+void read_input(void);
 void remove_quotes(char *str);
-void execute_command(char **args);
+void execute_command(char *cmd, char **args);
 
 #endif /*SHELL_H*/
