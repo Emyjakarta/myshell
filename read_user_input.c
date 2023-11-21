@@ -28,8 +28,11 @@ void read_input(char *input)
 		command = strtok(input, delim);
 		while (command != NULL)
 		{
-			printf("Command: %s\n", command);
-			arg_token = strtok(command, delim2);
+			printf("Executing Command: %s\n", command);
+			execute_command(command_args);
+		}
+		command = strtok(NULL, delim);
+		/*	arg_token = strtok(command, delim2);
 			while (arg_token != NULL)
 			{
 				command_args[arg_count++] = strdup(arg_token);
@@ -40,11 +43,11 @@ void read_input(char *input)
 			execute_command(command_args);
 			for (i = 0; i < arg_count; ++i)
 			{
-				printf("%s ", command_args[i]);
+				printf("%s ", command_args[i]);*/
 			/*	free(command_args[i]);*/
-			}
+		/*	}
 			command = strtok(NULL, delim);
-		}
+		}*/
 	}
 	free(input);
 }

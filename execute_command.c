@@ -5,11 +5,39 @@ void execute_command(char **args)
 	char *path = NULL,  command_path[PATH_MAX] = {0};
 	char *dir = NULL, *copy_path = NULL;
 	size_t dir_len, arg_len;
-
+	char *delim = " \t", *token = NULL;
+/*	char *com[MAX_COMMAND_ARGS] = strdup(*args);*/
+	int i = 0;
+	char *argm[100];
+	pid_t pid;
+	
 	if (access(args[0], F_OK) == 0)
 	{
-		if (execve(args[0], args, environ) == -1)
-			perror("execve");
+		pid = fork();
+		if (pid == 0)
+		{
+			token = strtok(args[0], delim);
+			while (token != NULL)
+			{
+				argm[i++] = token;
+				token = strtok(NULL, delim);
+			}
+			argm[i] = NULL;
+			if (execve(argm[0], argm, environ) == -1)
+			{
+				perror("execve");
+				exit(EXIT_FAILURE);
+			}
+		}
+		else if (pid < 0)
+		{
+			perror("fork");
+			exit(EXIT_FAILURE);
+		}
+		else
+		{
+			waitpid(pid, &status, 0);
+		}
 	}
 	else
 	{
