@@ -7,7 +7,7 @@ void execute_command(char **args)
 	size_t dir_len, arg_len;
 	char *delim = " \t", *token = NULL;
 /*	char *com[MAX_COMMAND_ARGS] = strdup(*args);*/
-	int i = 0;
+	int i = 0, status = 0;
 	char *argm[100];
 	pid_t pid;
 	

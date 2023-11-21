@@ -4,9 +4,9 @@ void read_input(char *input)
 {
 	ssize_t read = 0;
 	size_t buffer = 0;
-	char *arg_token = NULL;
-	char *delim = ";", *delim2 = " \t";
-	int i = 0, arg_count = 0;
+	/*char *arg_token = NULL;*/
+	char *delim = ";"; /*delim2 = " \t";*/
+/*	int i = 0, arg_count = 0;*/
 	char *command_args[MAX_COMMAND_ARGS];
 	char *comment_pos = NULL, *command = NULL;
 
