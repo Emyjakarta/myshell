@@ -44,7 +44,12 @@ void read_input(void)
 			}
 			command_args[arg_count] = NULL;
 			printf("Executing Command: %s\n", command_args[0]);
-			execute_command(command_args[0], command_args);
+			if (command_args[0][0] != '/') 
+			{
+				relative_path(command_args[0], command_args);
+			}
+			else
+				execute_command(command_args[0], command_args);
 			printf("Executing Command: %s\n", command_args[0]);
 			for (i = 0; i < arg_count; i++)
 			{

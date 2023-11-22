@@ -18,5 +18,7 @@ void show_prompt(void);
 void read_input(void);
 void remove_quotes(char *str);
 void execute_command(char *cmd, char **args);
+char *build_path(const char *_command[]);
+void relative_path(char *cmd, char **args);
 
 #endif /*SHELL_H*/
