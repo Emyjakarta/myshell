@@ -23,7 +23,7 @@ void read_input(void)
 		{
 			perror("Error reading input or EOF");
 			free(input);
-			return;
+			exit(EXIT_FAILURE);
 		}
 		input[strcspn(input, "\n")] = '\0';
 		comment_pos = strchr(input, '#');
