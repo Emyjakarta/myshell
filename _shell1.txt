@@ -1,0 +1,147 @@
+#include "_shell.h"
+/**
+ * _handle_wildcard-handle wildcard
+ * Return: void
+ */
+void _handle_wildcard(void)
+{
+	_putcharshell("Handle wildcard\n");
+}
+/**
+ * _handle_cd_command-handle cd command
+ * @_command: command
+ * Return: void
+ */
+void _handle_cd_command(const char *_command)
+{
+	char *_new_dir = _get_cd_path(_command), *_home_dir;
+	char _current_dir[PATH_MAX], *_oldpwd;
+	const char *ERR_MSG = "OLDPWD not set\n";
+
+	if (_new_dir == NULL || _new_dir[0] == '\0')
+		_new_dir = getenv("HOME");
+	_home_dir = getenv("HOME");
+	_oldpwd = getenv("OLDPWD");
+	if (getcwd(_current_dir, PATH_MAX) == NULL)
+	{
+		perror("getcwd");
+		return;
+	}
+	if (_strcmp(_new_dir, "~") == 0 && _home_dir != NULL)
+	{
+		_new_dir = _home_dir;
+	}
+	else if (_strcmp(_new_dir, "-") == 0)
+	{
+		if (_oldpwd == NULL)
+		{
+			write(STDERR_FILENO, ERR_MSG, _strlen(ERR_MSG));
+			_safe_free((void **)&_new_dir);
+			return;
+		}
+		_new_dir = _oldpwd;
+	}
+	if (chdir(_new_dir) != 0)
+	{
+		perror("chdir");
+		_safe_free((void **)&_new_dir);
+		return;
+	}
+	else
+	{
+		_setenv("OLDPWD", _current_dir, 1);
+		_setenv("PWD", _new_dir, 1);
+	}
+	if (_new_dir != NULL && _new_dir != getenv("HOME") && _new_dir != _oldpwd)
+		_safe_free((void **)&_new_dir);
+}
+/**
+ * _process_command_loop-process command in the main shell loop
+ * @_command: command to be processed
+ * Return: void
+ */
+void _process_command_loop(char **entry)
+{
+	const char *ERR = "Error: Command length exceeds maximum\n";
+	char ***commands = (char ***)malloc(MAXIMUM_COMMANDS * sizeof(char **));
+	char ****commands_ptr = &commands;
+	int shouldfreecommands = 0;
+
+	while (1)
+	{
+		_scan_command(entry);
+		_check_command(entry);
+		if (*entry == NULL)
+		{
+			shouldfreecommands = 1;
+			break;
+		}
+		else if (_is_exit(*entry))
+		{
+			free(*entry);
+			*entry = NULL;
+			shouldfreecommands = 1;
+			break;
+		}
+		_tokenize_command(*entry, commands_ptr);
+		if (_is_cd(*entry))
+		{
+			if (_strlen(*entry) >= MAXIMUM_COMMAND_LENGTH)
+			{
+				write(STDERR_FILENO, ERR, _strlen(ERR));
+				free(*entry), *entry = NULL;
+				shouldfreecommands = 1;
+				continue;
+			}
+			_handle_cd_command(*entry);
+		}
+		else if (_is_wildcard(*entry))
+		{
+			_handle_wildcard();
+		}
+		else
+		{
+			_execute_command(*entry);
+		}
+	}
+	if (shouldfreecommands)
+		_free_commands(commands_ptr);
+	free(commands);
+}
+/**
+ * main-implement the functionalities of a simple shell
+ * @argc: number of command line arguments
+ * @argv: argument vector(array of strings that represent the arguments)
+ * Return:Always 0 (success)
+ */
+int main(int argc, char **argv)
+{
+	char *_command = NULL;
+	int _result = EXIT_SUCCESS;
+	char _use_msg[] = "Usage: ";
+	char *_space = " ";
+	char *_filename = argv[0];
+	int _filename_len = _strlen(_filename);
+	char *_filename_msg = "[filename]";
+	int _filename_msg_len = _strlen(_filename_msg);
+	char *newline = "\n";
+	int newline_len = _strlen(newline), _space_len = _strlen(_space);
+
+	if (argc != 2)
+	{
+		_process_command_loop(&_command);
+	}
+	else if (argc == 2)
+		_exe_command_from_file(argv[1]);
+	else
+	{
+		_result = EXIT_FAILURE;
+		write(STDERR_FILENO, _use_msg, sizeof(_use_msg) - 1);
+		write(STDERR_FILENO, _filename, _filename_len);
+		write(STDERR_FILENO, _space, _space_len);
+		write(STDERR_FILENO, _filename_msg, _filename_msg_len);
+		write(STDERR_FILENO, newline, newline_len);
+		return (EXIT_FAILURE);
+	}
+	return ((errno != 0) ? errno : _result);
+}

@@ -23,6 +23,7 @@ typedef struct BuiltInCommand
 int builtin_handler(char *command, va_list ptr);
 int exit_handler(void);
 int cd_handler(va_list ptr);
+int _is_cd(const char *_command);
 int pwd_handler(void);
 
 void show_prompt(void);
