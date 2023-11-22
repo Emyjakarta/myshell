@@ -16,14 +16,14 @@ void execute_command(char *cmd, char **args)
 		else if (pid == 0)
 		{
 			printf("Executing: %s\n", cmd);
-			if (execve(cmd, args, environ) == -1)
+			if (execve(cmd, args, NULL) == -1)
 			{
 				perror("execve");
-				fprintf(stderr, "%s: command not found\n", args[0]);
 				exit(EXIT_FAILURE);
-			} 
+			}
 		}
 		else
 			waitpid(pid, &status, 0);
 	}
+	fprintf(stderr, "%s: not found\n", args[0]);
 }

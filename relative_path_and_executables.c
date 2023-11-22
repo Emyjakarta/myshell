@@ -29,7 +29,7 @@ void relative_path(char *cmd, char **args)
 				printf("Access granted for: %s\n", command_path);
 				printf("Executing: %s\n", command_path);
 				printf("Executing cmd: %s\n", cmd);
-				if (execve(command_path, args, environ) == -1)
+				if (execve(command_path, args, NULL) == -1)
 				{
 					perror("execve");
 					exit(EXIT_FAILURE);	
@@ -37,7 +37,7 @@ void relative_path(char *cmd, char **args)
 			}
 			dir = strtok(NULL, ":");
 		}
-		fprintf(stderr, "%s: command not found\n", args[0]);
+		fprintf(stderr, "%s: not found\n", args[0]);
 		exit(EXIT_FAILURE);
 	}
 	else
