@@ -9,10 +9,21 @@
 #include <stdlib.h>
 #include <sys/types.h>
 #include <sys/wait.h>
+#include <stdarg.h>
 
 #define MAX_COMMAND_ARGS 500
 
 extern char **environ;
+
+typedef struct BuiltInCommand
+{
+	char *command;
+	int (*handler)();
+} BuiltInCommand;
+int builtin_handler(char *command, va_list ptr);
+int exit_handler(void);
+int cd_handler(va_list ptr);
+int pwd_handler(void);
 
 void show_prompt(void);
 void read_input(void);
