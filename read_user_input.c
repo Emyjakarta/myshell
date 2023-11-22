@@ -6,10 +6,10 @@ void read_input(void)
 	ssize_t read = 0;
 	size_t buffer = 0;
 	char *arg_token = NULL;
-	char *delim = ";"; /*delim2 = " \t";*/
+	char *delim = ";";
 	int arg_count = 0;
 	char *command_args[MAX_COMMAND_ARGS];
-	char *comment_pos = NULL; /*command = NULL;*/
+	char *comment_pos = NULL;
 	int index = 0, i = 0;
 	char *arg = NULL;
 	char *single_command = NULL;
@@ -41,12 +41,6 @@ void read_input(void)
 				arg[strlen(arg_token)] = '\0';
 				command_args[arg_count++] = arg;
 				arg_token = strtok_r(NULL, " \t", &saveptr2);
-				/*arg_token = strtok(command, " \t");*/
-				/*while (arg_token != NULL)
-				  {
-				  command_args[arg_count++] = strdup(arg_token);
-				  arg_token = strtok(NULL, " \t");
-				  }*/
 			}
 			command_args[arg_count] = NULL;
 			printf("Executing Command: %s\n", command_args[0]);
@@ -61,39 +55,6 @@ void read_input(void)
 			single_command = strtok_r(NULL, delim, &saveptr1);
 			printf("single_command: %s\n", single_command);
 		}
-			/*command_args[arg_count] = NULL;*/	
-			/*command_args[index++] = command_args[0];*/
-			/*	command_args[index][arg_count] = '\0';*/
-			/*printf("Executing Command: %s\n", command_args[0]);
-			execute_command(command_args[0], command_args);
-			for (i = 0; i < arg_count; i++)
-			{
-				free(command_args[i]);
-			}
-			command = strtok(NULL, delim);*/
-		/*single_command = strtok(NULL, delim);*/
-		/*command_args[index] = NULL;*/
 	}
-	/*for (i = 0; i < index; i++)
-	  {
-	  printf("%s ", command_args[i]);
-	  free(command_args[i]);
-	  }*/
 	free(input);
 }
-/*	arg_token = strtok(command, delim2);
-	while (arg_token != NULL)
-	{
-	command_args[arg_count++] = strdup(arg_token);
-	printf("Argument/flag: %s\n", arg_token);
-	arg_token = strtok(NULL, delim2);
-	}
-	command_args[arg_count] = NULL;
-	execute_command(command_args);
-	for (i = 0; i < arg_count; ++i)
-	{
-	printf("%s ", command_args[i]);*/
-/*	free(command_args[i]);*/
-/*	}
-	command = strtok(NULL, delim);
-	}*/
