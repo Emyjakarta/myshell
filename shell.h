@@ -26,10 +26,11 @@ int cd_handler(va_list ptr);
 int pwd_handler(void);
 
 void show_prompt(void);
-void read_input(void);
+void read_input(char *input, ...);
 void remove_quotes(char *str);
 void execute_command(char *cmd, char **args);
 char *build_path(const char *_command[]);
 void relative_path(char *cmd, char **args);
+void tokenize_input(char *input, ...);
 
 #endif /*SHELL_H*/

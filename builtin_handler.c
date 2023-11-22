@@ -7,15 +7,15 @@ int builtin_handler(char *command, va_list ptr)
 		{"exit", exit_handler},
 		{"cd", cd_handler},
 		{"pwd", pwd_handler},
-		{"setenv", setenv_handler},
-		{"unsetenv", unsetenv_handler},
+	/*	{"setenv", setenv_handler},
+		{"unsetenv", unsetenv_handler},*/
 		{NULL, NULL}
-	}
+	};
 	for (i = 0; builtin[i].command != NULL; i++)
 	{
 		if (strcmp(command, builtin[i].command) == 0)
 		{
-			return (builtin[i].handler(ptr);
+			return (builtin[i].handler(ptr));
 		}
 	}
 	return (-1);
@@ -29,7 +29,7 @@ int cd_handler(va_list ptr)
 	const char *dir = va_arg(ptr, const char *);
 	if (dir == NULL)
 	{
-		dir = getcwd("HOME");
+		dir = getenv("HOME");
 		return (0);
 	}
 	if (chdir(dir) != 0)
