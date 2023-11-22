@@ -33,14 +33,17 @@ void read_input(void)
 		single_command = strtok_r(input, delim, &saveptr1);
 		while (single_command != NULL && index < MAX_COMMAND_ARGS - 1)
 		{
+			printf("single command: %s\nsaveptr1: %s\n", single_command, saveptr1);
 			arg_count = 0;
 			arg_token = strtok_r(single_command, " \t", &saveptr2);
+			printf("arg_token: %s\nsaveptr2: %s\n", arg_token, saveptr2);
 			while (arg_token != NULL && arg_count < MAX_COMMAND_ARGS - 1)
 			{
 				arg = strdup(arg_token);
 				arg[strlen(arg_token)] = '\0';
 				command_args[arg_count++] = arg;
 				arg_token = strtok_r(NULL, " \t", &saveptr2);
+				printf("arg_tokenb: %s\nsaveptr2b: %s\n", arg_token, saveptr2);
 			}
 			command_args[arg_count] = NULL;
 			printf("Executing Command: %s\n", command_args[0]);
@@ -58,7 +61,7 @@ void read_input(void)
 			}
 			printf("single_command: %s\n", single_command);
 			single_command = strtok_r(NULL, delim, &saveptr1);
-			printf("single_command: %s\n", single_command);
+			printf("single_command: %s\nsaveptr1: %s\n", single_command, saveptr1);
 		}
 	}
 	free(input);
