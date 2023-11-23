@@ -16,7 +16,7 @@ void execute_command(char *cmd, char **args)
 		else if (pid == 0)
 		{
 			printf("Executing: %s\n", cmd);
-			if (execve(cmd, args, NULL) == -1)
+			if (execve(cmd, args, environ) == -1)
 			{
 				perror("execve");
 				exit(EXIT_FAILURE);

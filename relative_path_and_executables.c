@@ -29,7 +29,7 @@ void relative_path(char *cmd, char **args)
 				printf("Access granted for: %s\n", command_path);
 				printf("Executing: %s\n", command_path);
 				printf("Executing cmd: %s\n", cmd);
-				if (execve(command_path, args, NULL) == -1)
+				if (execve(command_path, args, environ) == -1)
 				{
 					perror("execve");
 					exit(EXIT_FAILURE);	
