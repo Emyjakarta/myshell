@@ -45,11 +45,11 @@ char *_get_cd_path(const char *_command)
 		printf("Error: Command length exceeds maximum limit\n");
 		return (NULL);
 	}
-	if (strcmp(_command, "/") == 0)
+	/*if (strcmp(_command, "/") == 0)
 	{
 		printf("Command is '/', returning root directory\n");
 		return strdup("/");
-	}
+	}*/
 	_ptr_space = strchr(_command, ' '); 
 	if (_ptr_space == NULL)
 	{

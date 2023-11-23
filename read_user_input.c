@@ -22,5 +22,8 @@ void read_input(char *input)
 		remove_quotes(input);
 		tokenize_input(input);
 	}
-	free(input);
+	if (input)
+	{
+		free(input);
+	}
 }

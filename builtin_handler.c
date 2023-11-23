@@ -56,11 +56,11 @@ int cd_handler(char **arguments)
 		return (-1);*/
 	if (_home_dir == NULL)
 		return (-1);
-	if (_new_dir != _home_dir && _new_dir != _oldpwd)
+	/*if (_new_dir != _home_dir && _new_dir != _oldpwd)
 	{
 		_new_dir = strdup(_new_dir);
 		new_dir_allocated = true;
-	}
+	}*/
 	
 	/*if (_new_dir != NULL)
 		printf("_new_dir: %s\n", _new_dir);*/

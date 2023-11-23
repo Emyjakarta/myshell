@@ -19,7 +19,7 @@ void tokenize_input(char *input)
 		while (arg_token != NULL && arg_count < MAX_COMMAND_ARGS - 1)
 		{
 			arg = strdup(arg_token);
-			arg[strlen(arg_token)] = '\0';
+			/*arg[strlen(arg_token)] = '\0';*/
 			command_args[arg_count++] = arg;
 			arg_token = strtok_r(NULL, " \t", &saveptr2);
 			/*printf("arg_tokenb: %s\nsaveptr2b: %s\n", arg_token, saveptr2);*/
@@ -35,21 +35,28 @@ void tokenize_input(char *input)
 			}
 		}
 		/*printf("Executing Command: %s\n", command_args[0]);
-		builtin_handler(command_args[0], command_args + 1);
-		if (command_args[0][0] != '/')
-		{
-			relative_path(command_args[0], command_args);
-		}
-		else
-			execute_command(command_args[0], command_args);*/
+		  builtin_handler(command_args[0], command_args + 1);
+		  if (command_args[0][0] != '/')
+		  {
+		  relative_path(command_args[0], command_args);
+		  }
+		  else
+		  execute_command(command_args[0], command_args);*/
 		printf("Executing Command: %s\n", command_args[0]);
 		for (i = 0; i < arg_count; i++)
 		{
 			free(command_args[i]);
+			/*free(command_args[i]);*/
 			command_args[i] = NULL;
 		}
 		/*printf("single_command: %s\n", single_command);*/
 		single_command = strtok_r(NULL, delim, &saveptr1);
 		printf("single_command: %s\nsaveptr1: %s\n", single_command, saveptr1);
+	}
+	for (i = 0; i < arg_count; i++)
+	{
+		_safe_free((void **)&command_args[i]);
+		/*free(command_args[i]);*/
+		/*command_args[i] = NULL;*/
 	}
 }
