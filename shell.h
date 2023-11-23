@@ -30,6 +30,7 @@ char *_get_cd_path(const char *_command);
 int pwd_handler(char **arguments);
 
 void show_prompt(void);
+char _putcharshell(const char *str);
 void read_input(char *input);
 void remove_quotes(char *str);
 void execute_command(char *cmd, char **args);
