@@ -29,30 +29,30 @@ int _is_cd(const char *_command)
  */
 char *_get_cd_path(const char *_command)
 {
-	char *_ptr_space;
-	int Q;
+	const char *_ptr_space = strchr(_command, ' '); 
+	char *path = NULL;
+	size_t cmd_length = 0;
 
-	for (Q = 0; _command[Q] != '\0' && Q < MAXIMUM_COMMAND_LENGTH - 1; ++Q)
-	{
-		if (MAXIMUM_COMMAND_LENGTH - 1 <= Q)
-		{
-			return (NULL);
-		}
-	}
-	_ptr_space = strchr((char *)_command, ' ');
-	if (_ptr_space == NULL)
+	if (_command == NULL)
 		return (NULL);
-	if (*(_ptr_space + 1) == '\0')
+	cmd_length = strlen(_command);
+	if (cmd_length >= MAXIMUM_COMMAND_LENGTH - 1)
+		return (NULL);
+	if (_ptr_space == NULL)
+		return (strdup ("/"));
+	while (*_ptr_space == ' ')
+		_ptr_space++;
+	if (*_ptr_space == '\0')
 		return (strdup("/"));
-	else
-		return (strdup(_ptr_space + 1));
+	path = strdup(_ptr_space);
+	return (path);
 }
-/**
- * _is_wildcard-check if it is a wildcard
- * @_command: command to be checked
- * Return: 1 if the command is a wildcard character
- */
-int _is_wildcard(const char *_command)
-{
-	return (strpbrk((char *)_command, "*") != NULL);
-}
+	/**
+	 * _is_wildcard-check if it is a wildcard
+	 * @_command: command to be checked
+	 * Return: 1 if the command is a wildcard character
+	 */
+	int _is_wildcard(const char *_command)
+	{
+		return (strpbrk((char *)_command, "*") != NULL);
+	}

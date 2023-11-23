@@ -7,7 +7,8 @@ void tokenize_input(char *input, ...)
 	char *command_args[MAX_COMMAND_ARGS];
 	char *arg = NULL, *single_command = NULL;
 	char *saveptr1 = NULL, *saveptr2 = NULL;
-	int is_builtin = 0;
+	va_list args;
+	va_start(args, input);
 
 	single_command = strtok_r(input, delim, &saveptr1);
 	while (single_command != NULL && index < MAX_COMMAND_ARGS - 1)
@@ -22,19 +23,12 @@ void tokenize_input(char *input, ...)
 			arg[strlen(arg_token)] = '\0';
 			command_args[arg_count++] = arg;
 			arg_token = strtok_r(NULL, " \t", &saveptr2);
-			printf("arg_tokenb: %s\nsaveptr2b: %s\n", arg_token, saveptr2);
+			/*printf("arg_tokenb: %s\nsaveptr2b: %s\n", arg_token, saveptr2);*/
 		}
 		command_args[arg_count] = NULL;
 		printf("Executing Command: %s\n", command_args[0]);
-		is_builtin = builtin_handler(command_args[0], NULL);
-		if (is_builtin != -1)
-		{
-			va_list empty_args;
-			va_start(empty_args, input);
-			builtin_handler(command_args[0], empty_args);
-			va_end(empty_args);
-		}
-		else if (command_args[0][0] != '/')
+		builtin_handler(command_args[0], args);
+		if (command_args[0][0] != '/')
 		{
 			relative_path(command_args[0], command_args);
 		}
@@ -46,8 +40,9 @@ void tokenize_input(char *input, ...)
 			free(command_args[i]);
 			command_args[i] = NULL;
 		}
-		printf("single_command: %s\n", single_command);
+		/*printf("single_command: %s\n", single_command);*/
 		single_command = strtok_r(NULL, delim, &saveptr1);
 		printf("single_command: %s\nsaveptr1: %s\n", single_command, saveptr1);
 	}
+	va_end(args);
 }
