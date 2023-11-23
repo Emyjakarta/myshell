@@ -1,14 +1,13 @@
 #include "shell.h"
 
-void tokenize_input(char *input, ...)
+void tokenize_input(char *input)
 {
 	char *arg_token = NULL, *delim = ";";
 	int index = 0, i = 0, arg_count = 0;
 	char *command_args[MAX_COMMAND_ARGS];
 	char *arg = NULL, *single_command = NULL;
 	char *saveptr1 = NULL, *saveptr2 = NULL;
-	va_list args;
-	va_start(args, input);
+	int result;
 
 	single_command = strtok_r(input, delim, &saveptr1);
 	while (single_command != NULL && index < MAX_COMMAND_ARGS - 1)
@@ -27,13 +26,22 @@ void tokenize_input(char *input, ...)
 		}
 		command_args[arg_count] = NULL;
 		printf("Executing Command: %s\n", command_args[0]);
-		builtin_handler(command_args[0], args);
+		result = builtin_handler(command_args[0], command_args + 1);
+		if (result != 1) {
+			if (command_args[0][0] != '/') {
+				relative_path(command_args[0], command_args);
+			} else {
+				execute_command(command_args[0], command_args);
+			}
+		}
+		/*printf("Executing Command: %s\n", command_args[0]);
+		builtin_handler(command_args[0], command_args + 1);
 		if (command_args[0][0] != '/')
 		{
 			relative_path(command_args[0], command_args);
 		}
 		else
-			execute_command(command_args[0], command_args);
+			execute_command(command_args[0], command_args);*/
 		printf("Executing Command: %s\n", command_args[0]);
 		for (i = 0; i < arg_count; i++)
 		{
@@ -44,5 +52,4 @@ void tokenize_input(char *input, ...)
 		single_command = strtok_r(NULL, delim, &saveptr1);
 		printf("single_command: %s\nsaveptr1: %s\n", single_command, saveptr1);
 	}
-	va_end(args);
 }

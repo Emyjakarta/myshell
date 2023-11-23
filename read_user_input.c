@@ -1,6 +1,6 @@
 #include "shell.h"
 
-void read_input(char *input, ...)
+void read_input(char *input)
 {
 	ssize_t read = 0;
 	size_t buffer = 0;

@@ -29,30 +29,55 @@ int _is_cd(const char *_command)
  */
 char *_get_cd_path(const char *_command)
 {
-	const char *_ptr_space = strchr(_command, ' '); 
+	const char *_ptr_space;
+	/*int Q;*/
 	char *path = NULL;
 	size_t cmd_length = 0;
 
 	if (_command == NULL)
-		return (NULL);
+	{
+		printf("Error: NULL command in _get_cd_path\n");
+		return (getenv("HOME"));
+	}
 	cmd_length = strlen(_command);
 	if (cmd_length >= MAXIMUM_COMMAND_LENGTH - 1)
+	{
+		printf("Error: Command length exceeds maximum limit\n");
 		return (NULL);
+	}
+	if (strcmp(_command, "/") == 0)
+	{
+		printf("Command is '/', returning root directory\n");
+		return strdup("/");
+	}
+	_ptr_space = strchr(_command, ' '); 
 	if (_ptr_space == NULL)
-		return (strdup ("/"));
-	while (*_ptr_space == ' ')
+	{
+		printf("No space found in command, using the entire command as the path: %s\n", _command);
+		return (strdup(_command));
+	}
+	printf("Parsed path from command: %.*s\n", (int)(cmd_length - (_ptr_space - _command)), _ptr_space + 1);
+
+	while (*_ptr_space != '\0' && *_ptr_space == ' ')
 		_ptr_space++;
-	if (*_ptr_space == '\0')
-		return (strdup("/"));
+	printf("Parsed path from command: %.*s\n", (int)(cmd_length - (_ptr_space - _command)), _ptr_space + 1);
+
+	/*if (*(_ptr_space + 1) == '\0')
+		return (strdup("/"));*/
 	path = strdup(_ptr_space);
+	if (path == NULL)
+	{
+		perror("strdup");
+		return (NULL);
+	}
 	return (path);
 }
-	/**
-	 * _is_wildcard-check if it is a wildcard
-	 * @_command: command to be checked
-	 * Return: 1 if the command is a wildcard character
-	 */
-	int _is_wildcard(const char *_command)
-	{
-		return (strpbrk((char *)_command, "*") != NULL);
-	}
+/**
+ * _is_wildcard-check if it is a wildcard
+ * @_command: command to be checked
+ * Return: 1 if the command is a wildcard character
+ */
+int _is_wildcard(const char *_command)
+{
+	return (strpbrk((char *)_command, "*") != NULL);
+}
