@@ -30,7 +30,7 @@ int _is_cd(const char *_command)
 char *_get_cd_path(const char *_command)
 {
 	const char *_ptr_space;
-	/*int Q;*/
+	char *result = NULL;
 	char *path = NULL;
 	size_t cmd_length = 0;
 
@@ -45,25 +45,29 @@ char *_get_cd_path(const char *_command)
 		printf("Error: Command length exceeds maximum limit\n");
 		return (NULL);
 	}
-	/*if (strcmp(_command, "/") == 0)
+	if (strcmp(_command, "cd") == 0) {
+		result = getenv("HOME");
+		return (result);
+	}
+	if (strcmp(_command, "cd /") == 0)
 	{
 		printf("Command is '/', returning root directory\n");
-		return strdup("/");
-	}*/
+	  	return strdup("/");
+	}
 	_ptr_space = strchr(_command, ' '); 
 	if (_ptr_space == NULL)
 	{
 		printf("No space found in command, using the entire command as the path: %s\n", _command);
 		return (strdup(_command));
 	}
-	printf("Parsed path from command: %.*s\n", (int)(cmd_length - (_ptr_space - _command)), _ptr_space + 1);
+	printf("Parsed path from command: %.*s\n", (int)(cmd_length - (_ptr_space - _command)), _ptr_space);
 
 	while (*_ptr_space != '\0' && *_ptr_space == ' ')
 		_ptr_space++;
-	printf("Parsed path from command: %.*s\n", (int)(cmd_length - (_ptr_space - _command)), _ptr_space + 1);
+	printf("Parsed path from command: %.*s\n", (int)(cmd_length - (_ptr_space - _command)), _ptr_space);
 
 	/*if (*(_ptr_space + 1) == '\0')
-		return (strdup("/"));*/
+	  return (strdup("/"));*/
 	path = strdup(_ptr_space);
 	if (path == NULL)
 	{

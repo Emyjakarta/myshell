@@ -32,7 +32,7 @@ int builtin_handler(char *command, char **arguments, int *last_exit_status)
 			if (result == -1)
 			{
 				fprintf(stderr, "Error executing built in command: %s\n", command);
-				/*return (2);*/
+				return (2);
 			}
 			return (1);
 		}

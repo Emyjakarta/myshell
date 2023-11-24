@@ -69,6 +69,7 @@ void execute_single_command(char *command, char **arguments, int *last_exit_stat
 	printf("Executing Command: %s\n", command);
 	/*arguments[0] = command;*/
 	result = builtin_handler(command, arguments, last_exit_status);
+	printf("result of builtin_handler: %d\n", result);
 	if (result != 1) {
 		if (command[0] != '/') {
 			relative_path(command, arguments, last_exit_status);
