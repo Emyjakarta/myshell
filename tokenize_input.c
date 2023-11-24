@@ -30,14 +30,14 @@ void tokenize_input(char *input, int *last_exit_status)
 			{
 				if (*last_exit_status == 0)
 				{
-					execute_single_command(command_args[0], last_exit_status);
+					execute_single_command(command_args[0], command_args, last_exit_status);
 				}
 			}
 			else if (strcmp(arg_token, "||") == 0)
 			{
 				if (*last_exit_status != 0)
 				{
-					execute_single_command(command_args[0], last_exit_status);
+					execute_single_command(command_args[0], command_args, last_exit_status);
 				}
 			}
 			for (i = 0; i < arg_count; i++) {
@@ -48,7 +48,7 @@ void tokenize_input(char *input, int *last_exit_status)
 		}
 		else
 		{
-			execute_single_command(command_args[0], last_exit_status);
+			execute_single_command(command_args[0], command_args, last_exit_status);
 			for (i = 0; i < arg_count; i++) {
 				free(command_args[i]);
 				command_args[i] = NULL;
@@ -61,13 +61,13 @@ void tokenize_input(char *input, int *last_exit_status)
 		command_args[i] = NULL;
 	}
 }
-void execute_single_command(char *command, int *last_exit_status)
+void execute_single_command(char *command, char **arguments, int *last_exit_status)
 {
 	int result = 0;
-	char *arguments[30] = {NULL};
+	/*char *arguments[30] = {NULL};*/
 
 	printf("Executing Command: %s\n", command);
-	arguments[0] = command;
+	/*arguments[0] = command;*/
 	result = builtin_handler(command, arguments, last_exit_status);
 	if (result != 4) {
 		if (command[0] != '/') {

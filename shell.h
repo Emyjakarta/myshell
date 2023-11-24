@@ -33,7 +33,7 @@ void show_prompt(void);
 char _putcharshell(const char *str);
 void read_input(char *input);
 void remove_quotes(char *str);
-void execute_single_command(char *command, int *last_exit_status);
+void execute_single_command(char *command, char **arguments, int *last_exit_status);
 void execute_command(char *cmd, char **args, int *last_exit_status);
 char *build_path(const char *_command[]);
 void relative_path(char *cmd, char **args, int *last_exit_status);
