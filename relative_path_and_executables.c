@@ -7,7 +7,7 @@ void relative_path(char *cmd, char **args, int *last_exit_status)
 	int status = 0;
 	pid_t pid;
 
-	if (last_exit_status != NULL)
+	/*if (last_exit_status != NULL)
 	{
 		if (strcmp(cmd, "&&") == 0) {
 			if (*last_exit_status == 0) {
@@ -18,7 +18,7 @@ void relative_path(char *cmd, char **args, int *last_exit_status)
 				relative_path(cmd, args, last_exit_status);
 			}
 		}
-	} else {
+	} else {*/
 		pid = fork();
 		if (pid < 0)
 		{
@@ -61,5 +61,5 @@ void relative_path(char *cmd, char **args, int *last_exit_status)
 			else
 				*last_exit_status = -1;
 		}
-	}
+	/*}*/
 }

@@ -5,7 +5,7 @@ void execute_command(char *cmd, char **args, int *last_exit_status)
 	int status = 0;
 	pid_t pid;
 
-	if (strcmp(cmd, "&&") == 0)
+	/*if (strcmp(cmd, "&&") == 0)
 	{
 		if (*last_exit_status == 0) {
 			execute_command(args[0], args, last_exit_status);
@@ -14,7 +14,7 @@ void execute_command(char *cmd, char **args, int *last_exit_status)
 		if (*last_exit_status != 0) {
 			execute_command(args[0], args, last_exit_status);
 		}
-	} else {
+	} else {*/
 		if (access(cmd, X_OK) == 0)
 		{
 			pid = fork();
@@ -44,5 +44,5 @@ void execute_command(char *cmd, char **args, int *last_exit_status)
 				}
 			}
 		}
-	}
+	/*}*/
 }
