@@ -4,40 +4,41 @@ bool new_dir_allocated = false;
 int builtin_handler(char *command, char **arguments, int *last_exit_status)
 {
 	int i = 0, result = 0;
-	if (strcmp(command, "&&") == 0) {
-		if (*last_exit_status == 0) {
-			builtin_handler(command, arguments, last_exit_status);
-		}
-	} else if (strcmp(command, "||") == 0) {
-		if (*last_exit_status != 0) {
-			builtin_handler(command, arguments, last_exit_status);
-		}
-	} else {
-		BuiltInCommand builtin[] = {
-			{"exit", exit_handler},
-			{"cd", cd_handler},
-			{"pwd", pwd_handler},
-			/*	{"setenv", setenv_handler},
-				{"unsetenv", unsetenv_handler},*/
-			{NULL, NULL}
-		};
-		for (i = 0; builtin[i].command != NULL; i++)
+	/*if (strcmp(command, "&&") == 0) {
+	  if (*last_exit_status == 0) {
+	  builtin_handler(command, arguments, last_exit_status);
+	  }
+	  } else if (strcmp(command, "||") == 0) {
+	  if (*last_exit_status != 0) {
+	  builtin_handler(command, arguments, last_exit_status);
+	  }
+	  } else {*/
+	BuiltInCommand builtin[] = {
+		{"exit", exit_handler},
+		{"cd", cd_handler},
+		{"pwd", pwd_handler},
+		/*	{"setenv", setenv_handler},
+			{"unsetenv", unsetenv_handler},*/
+		{NULL, NULL}
+	};
+	(void) last_exit_status;
+	for (i = 0; builtin[i].command != NULL; i++)
+	{
+		printf("Comparing command: %s with built-in: %s\n", command, builtin[i].command);
+		if (strcmp(command, builtin[i].command) == 0)
 		{
-			printf("Comparing command: %s with built-in: %s\n", command, builtin[i].command);
-			if (strcmp(command, builtin[i].command) == 0)
+			printf("Match found, calling handler for: %s\n", builtin[i].command);
+			result = builtin[i].handler(arguments);
+			if (result == -1)
 			{
-				printf("Match found, calling handler for: %s\n", builtin[i].command);
-				result = builtin[i].handler(arguments);
-				if (result == -1)
-				{
-					fprintf(stderr, "Error executing built in command: %s\n", command);
-					return (2);
-				}
-				return (4);
+				fprintf(stderr, "Error executing built in command: %s\n", command);
+				/*return (2);*/
 			}
+			return (1);
 		}
-		printf("Command not found: %s\n", command);
 	}
+	printf("Command not found: %s\n", command);
+	/*}*/
 	return (-1);
 }
 int exit_handler(char **arguments)
