@@ -2,7 +2,7 @@
 
 void execute_command(char *cmd, char **args, int *last_exit_status)
 {
-	int status = 0;
+	int status = 0, execve_status = 0;
 	pid_t pid;
 
 	/*if (strcmp(cmd, "&&") == 0)
@@ -26,8 +26,10 @@ void execute_command(char *cmd, char **args, int *last_exit_status)
 		else if (pid == 0)
 		{
 			printf("Executing: %s\n", cmd);
-			if (execve(cmd, args, environ) == -1)
+			execve_status = execve(cmd, args, environ);
+			if (execve_status == -1)
 			{
+				printf("execve_status: %d\n", execve_status);
 				perror("execve");
 				exit(EXIT_FAILURE);
 			}
