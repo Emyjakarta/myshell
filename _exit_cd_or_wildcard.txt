@@ -27,53 +27,76 @@ int _is_cd(const char *_command)
  * @_command: command to be checked
  * Return: pointer to the string containing path following cd
  */
-char *_get_cd_path(const char *_command)
+char *_get_cd_path(const char *_command, char **arguments)
 {
 	const char *_ptr_space;
 	char *result = NULL;
 	char *path = NULL;
 	size_t cmd_length = 0;
 
+	printf("Entered _get_cd_path function\n");
 	if (_command == NULL)
 	{
 		printf("Error: NULL command in _get_cd_path\n");
+		printf("Returning from line 40\n");
 		return (getenv("HOME"));
 	}
+	if (arguments[0] != NULL)
+	{
+		return (strdup(arguments[0]));
+	}
+	else
+		return (getenv("HOME"));
 	cmd_length = strlen(_command);
 	if (cmd_length >= MAXIMUM_COMMAND_LENGTH - 1)
 	{
 		printf("Error: Command length exceeds maximum limit\n");
+		printf("Returning from line 47\n");
 		return (NULL);
 	}
-	if (strcmp(_command, "cd") == 0) {
+	printf("_command before line 52: %s\n", _command);
+	if (strcmp(_command, "cd") == 0 && arguments[0][0] == '\0') {
 		result = getenv("HOME");
+		printf("Returning from line 52\n");
 		return (result);
 	}
-	if (strcmp(_command, "cd /") == 0)
+	if (strcmp(_command, "cd") == 0 && arguments[0][0] == '/')
 	{
 		printf("Command is '/', returning root directory\n");
-	  	return strdup("/");
+		printf("Returning from line 58\n");
+		return strdup("/");
 	}
 	_ptr_space = strchr(_command, ' '); 
 	if (_ptr_space == NULL)
 	{
 		printf("No space found in command, using the entire command as the path: %s\n", _command);
+		printf("Returning from line 65\n");
 		return (strdup(_command));
 	}
-	printf("Parsed path from command: %.*s\n", (int)(cmd_length - (_ptr_space - _command)), _ptr_space);
+	printf("Parsed path from command: %s\n", _ptr_space);
+	/*printf("Parsed path from command: %.*s\n", (int)(cmd_length - (_ptr_space - _command)), _ptr_space);*/
 
 	while (*_ptr_space != '\0' && *_ptr_space == ' ')
 		_ptr_space++;
-	printf("Parsed path from command: %.*s\n", (int)(cmd_length - (_ptr_space - _command)), _ptr_space);
+	printf("Parsed path from command: %s\n", _ptr_space);
+	/*printf("Parsed path from command: %.*s\n", (int)(cmd_length - (_ptr_space - _command)), _ptr_space);*/
 
 	/*if (*(_ptr_space + 1) == '\0')
 	  return (strdup("/"));*/
+	if (*_ptr_space == '\0') {
+		/* No path after "cd" found, return NULL or HOME depending on requirements*/
+		printf("Returning from line 80\n");
+		return getenv("HOME"); /*Change this to return NULL if needed*/
+	}
 	path = strdup(_ptr_space);
 	if (path == NULL)
 	{
 		perror("strdup");
+		printf("Returning from line 87\n");
 		return (NULL);
 	}
+	printf("path before returning from _get_cd_path: %s\n", path);
+	printf("Returning from line 91\n");
 	return (path);
 }
 /**

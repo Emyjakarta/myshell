@@ -59,8 +59,8 @@ int cd_handler(char **arguments)
 
 	_oldpwd = getenv("OLDPWD");
 	printf("_new_dir before check: %s\n", _new_dir);
-	/*if (_new_dir == NULL || _new_dir[0] == '\0')
-		_new_dir = _home_dir;*/
+	if (_new_dir == NULL || _new_dir[0] == '\0')
+		_new_dir = _home_dir;
 	/*printf("_new_dir after check: %s\n", _new_dir);*/
 
 	/*path = _get_cd_path(_new_dir);*/

@@ -2,6 +2,7 @@
 #define SHELL_H
 
 #include <stdio.h>
+#include <sys/stat.h>
 #include <unistd.h>
 #include <string.h>
 #include <stddef.h>
@@ -20,14 +21,14 @@ extern char **environ;
 typedef struct BuiltInCommand
 {
 	char *command;
-	int (*handler)(char **);
+	int (*handler)(char *, char **);
 } BuiltInCommand;
 int builtin_handler(char *command, char **arguments, int *last_exit_status);
-int exit_handler(char **arguments);
-int cd_handler(char **arguments);
+int exit_handler(char *command, char **arguments);
+int cd_handler(char *command, char **arguments);
 int _is_cd(const char *_command);
-char *_get_cd_path(const char *_command);
-int pwd_handler(char **arguments);
+char *_get_cd_path(const char *_command, char **arguments);
+int pwd_handler(char *command, char **arguments);
 
 void show_prompt(void);
 char _putcharshell(const char *str);
