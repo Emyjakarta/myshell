@@ -49,14 +49,6 @@ int exit_handler(char *command, char **arguments)
 
 	exit(EXIT_SUCCESS);
 }
-/*#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <limits.h>
-#include <errno.h>
-#include <sys/stat.h>
-#include <unistd.h>*/
-
 int cd_handler(char *command, char **arguments) {
 	char *_new_dir = _get_cd_path(command, arguments);
 	char _current_dir[PATH_MAX], *_oldpwd, *_home_dir;
