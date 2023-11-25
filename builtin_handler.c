@@ -56,17 +56,18 @@ int cd_handler(char **arguments)
 	/*(void) arguments;*/
 
 	_home_dir = getenv("HOME");
+
 	_oldpwd = getenv("OLDPWD");
 	printf("_new_dir before check: %s\n", _new_dir);
-	if (_new_dir == NULL || _new_dir[0] == '\0')
-		_new_dir = _home_dir;
-	printf("_new_dir after check: %s\n", _new_dir);
+	/*if (_new_dir == NULL || _new_dir[0] == '\0')
+		_new_dir = _home_dir;*/
+	/*printf("_new_dir after check: %s\n", _new_dir);*/
 
 	/*path = _get_cd_path(_new_dir);*/
 	/*if (path == NULL)
 	  return (-1);*/
-	if (_home_dir == NULL)
-		return (-1);
+	/*if (_home_dir == NULL)
+		return (-1);*/
 	/*if (_new_dir != _home_dir && _new_dir != _oldpwd)
 	  {
 	  _new_dir = strdup(_new_dir);
@@ -82,10 +83,13 @@ int cd_handler(char **arguments)
 	}
 	printf("Before chdir: _new_dir: %s, _current_dir: %s, PWD: %s, OLDPWD: %s\n",
 			_new_dir, _current_dir, getenv("PWD"), getenv("OLDPWD"));
-	if (_new_dir == NULL || strcmp(_new_dir, "~") == 0)
+	if (_new_dir == NULL || _new_dir[0] == '\0' || strcmp(_new_dir, "~") == 0)
 	{
 		_new_dir = _home_dir;
 	}
+	printf("_new_dir after check: %s\n", _new_dir);
+	if (_home_dir == NULL)
+		return (-1);
 	else if (strcmp(_new_dir, "-") == 0)
 	{
 		if (_oldpwd == NULL)
