@@ -59,7 +59,10 @@ void relative_path(char *cmd, char **args, int *last_exit_status)
 	{
 		waitpid(pid, &status, 0);
 		if (WIFEXITED(status))
+		{
 			*last_exit_status = WEXITSTATUS(status);
+			printf("After execution, last_exit_status = %d\n", *last_exit_status);
+		}
 		else
 			*last_exit_status = -1;
 	}

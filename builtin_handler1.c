@@ -26,7 +26,7 @@ int builtin_handler(char *command, char **arguments, int *last_exit_status)
 	for (i = 0; builtin[i].command != NULL; i++)
 	{
 		printf("Comparing command: %s with built-in: %s\n", command, builtin[i].command);
-		if (strcmp(command, builtin[i].command) == 0)
+		if (command != NULL && strcmp(command, builtin[i].command) == 0)
 		{
 			printf("Match found, calling handler for: %s\n", builtin[i].command);
 			result = builtin[i].handler(command, arguments);
