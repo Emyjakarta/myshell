@@ -4,16 +4,6 @@ bool new_dir_allocated = false;
 int builtin_handler(char *command, char **arguments)
 {
 	int i = 0, result = 0;
-	/*int last_exit_status = 0;*/
-	/*if (strcmp(command, "&&") == 0) {
-	  if (*last_exit_status == 0) {
-	  builtin_handler(command, arguments, last_exit_status);
-	  }
-	  } else if (strcmp(command, "||") == 0) {
-	  if (*last_exit_status != 0) {
-	  builtin_handler(command, arguments, last_exit_status);
-	  }
-	  } else {*/
 	BuiltInCommand builtin[] = {
 		{"exit", exit_handler},
 		{"cd", cd_handler},
@@ -30,17 +20,17 @@ int builtin_handler(char *command, char **arguments)
 		{
 			printf("Match found, calling handler for: %s\n", builtin[i].command);
 			result = builtin[i].handler(command, arguments);
-			if (result == -1)
+			if (result == 1)
 			{
 				fprintf(stderr, "Error executing built in command: %s\n", command);
-				return (2);
+				return (20);
 			}
 			return (0);
 		}
 	}
 	printf("Command not found: %s\n", command);
 	/*}*/
-	return (-1);
+	return (1);
 }
 int exit_handler(char *command, char **arguments)
 {

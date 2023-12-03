@@ -1,4 +1,5 @@
 #include "shell.h"
+bool skip_next_command = false;
 
 int tokenize_input(char *input)
 {
@@ -10,14 +11,9 @@ int tokenize_input(char *input)
 	char *saveptr1 = NULL, *saveptr2 = NULL;
 	char *logical_operator = NULL;
 	char *logical_operator_next = NULL;
-	/*char *next_command = NULL;
-	  char *logical_and = NULL;
-	  char *logical_or = NULL;
-	  char *com = NULL;*/
 	char *command_copy = NULL;
 
 	single_command = strtok_r(input, delim, &saveptr1);
-	/*single_command = strtok_r(input, delim, &saveptr1);*/
 	while (single_command != NULL && index < MAX_COMMAND_ARGS - 1)
 	{
 		command_copy = strdup(single_command);
@@ -31,7 +27,6 @@ int tokenize_input(char *input)
 			if (strcmp(arg_token, "&&") == 0 || strcmp(arg_token, "||") == 0)
 			{
 				logical_operator_next = strdup(arg_token);
-				/*logical_operator = strdup(arg_token);*/
 			}
 			else
 			{
@@ -42,24 +37,33 @@ int tokenize_input(char *input)
 			arg_token = strtok_r(NULL, " \t", &saveptr2);
 		}
 		command_args[arg_count] = NULL;
+		if (skip_next_command)
+		{
+			skip_next_command = false;
+			continue;
+		}
+		last_exit_status = execute_single_command(command_args[0], command_args, last_exit_status, logical_operator);
+		printf("logical operator before check: %s\n", logical_operator);
+		printf("last_exit_status before check: %d\n", last_exit_status);
 		if (logical_operator != NULL) {
 			if ((strcmp(logical_operator, "&&") == 0 && last_exit_status != 0) ||
 					(strcmp(logical_operator, "||") == 0 && last_exit_status == 0)) {
 				printf("Skipping command due to logical operator: %s\n", logical_operator);
-				return (9);
+				skip_next_command = true;
 			}
 		}
-		last_exit_status = execute_single_command(command_args[0], command_args, last_exit_status, logical_operator);
+		/*		last_exit_status = execute_single_command(command_args[0], command_args, last_exit_status, logical_operator);*/
 		logical_operator = logical_operator_next;
-		if (last_exit_status == 9)
-		{
-			last_exit_status = 9;
-			printf("Command was skipped, last exit status = %d\n", last_exit_status);
-		}
-		else
-		{
-			printf("Command was executed, last exit status = %d\n", last_exit_status);
-		}
+		logical_operator_next = NULL;
+		/*if (last_exit_status == 9)
+		  {
+		  last_exit_status = 9;
+		  printf("Command was skipped, last exit status = %d\n", last_exit_status);
+		  }
+		  else
+		  {
+		  printf("Command was executed, last exit status = %d\n", last_exit_status);
+		  }*/
 		/*if ((len >= 2 && single_command[len - 2] == '&' && single_command[len - 1] == '&')
 		  || (len >= 2 && single_command[len - 2] == '|' && single_command[len - 1] == '|'))
 		  {
@@ -170,10 +174,10 @@ int tokenize_input(char *input)
 			free(logical_operator);
 			logical_operator = NULL;
 		}
-		if (logical_operator_next != NULL) {
-			free(logical_operator_next);
-			logical_operator_next = NULL;
-		}
+		/*if (logical_operator_next != NULL) {
+		  free(logical_operator_next);
+		  logical_operator_next = NULL;
+		  }*/
 		for (i = 0; i < arg_count; i++) {
 			free(command_args[i]);
 			command_args[i] = NULL;
@@ -192,8 +196,6 @@ int tokenize_input(char *input)
   }*/
 int execute_single_command(char *command, char **arguments, int result, char *logical_operator)
 {
-	/*char *arguments[30] = {NULL};*/
-
 	printf("Before execution, last_exit_status = %d\n", result);
 	printf("Executing Command: %s\n", command);
 	printf("Logical operator: %s\n", logical_operator);
@@ -201,25 +203,30 @@ int execute_single_command(char *command, char **arguments, int result, char *lo
 		if ((strcmp(logical_operator, "&&") == 0 && result != 0) ||
 				(strcmp(logical_operator, "||") == 0 && result == 0)) {
 			printf("Skipping command due to logical operator: %s\n", logical_operator);
-			return (9);
+			skip_next_command = true;
 		}
+		printf("Skip_next_command has been set to true");
+		printf("Before calling builtin (line 212), logical_operator: %s\n", logical_operator);
+		printf("Before calling builtin (line 212), result: %d\n", result);
+		printf("Before calling builtin (line 212), skip_next_command: %d\n", skip_next_command);
 	}
 	else if (logical_operator == NULL ||
 			(strcmp(logical_operator, "&&") == 0 && result == 0) ||
 			(strcmp(logical_operator, "||") == 0 && result != 0)) {
 		result = builtin_handler(command, arguments);
 		printf("result of builtin_handler: %d\n", result);
-		if (result == -1) {
+		if (result == 1) {
 			if (command != NULL && command[0] != '/') {
 				result = relative_path(command, arguments);
 			} else {
 				result = execute_command(command, arguments);
 			}
+			printf("After executing commands, result in execute_single_command: %d\n", result);
 		}
 	}
-	printf("Executing Command: %s\n", command);
 	return (result);
 }
+/*printf("Executing Command: %s\n", command);*/
 /*arguments[0] = command;*/
 /*for (i = 0; i < arg_count; i++)
   {
