@@ -40,5 +40,7 @@ char *build_path(const char *_command[]);
 int relative_path(char *cmd, char **args);
 int tokenize_input(char *input);
 void _safe_free(void **ptr);
+char *obtain_operator(char *str);
+void trim_spaces(char *str);
 
 #endif /*SHELL_H*/
