@@ -23,7 +23,7 @@ typedef struct BuiltInCommand
 	char *command;
 	int (*handler)(char *, char **);
 } BuiltInCommand;
-int builtin_handler(char *command, char **arguments, int *last_exit_status);
+int builtin_handler(char *command, char **arguments);
 int exit_handler(char *command, char **arguments);
 int cd_handler(char *command, char **arguments);
 int _is_cd(const char *_command);
@@ -34,11 +34,11 @@ void show_prompt(void);
 char _putcharshell(const char *str);
 void read_input(char *input);
 void remove_quotes(char *str);
-void execute_single_command(char *command, char **arguments, int *last_exit_status, char *logical_operator);
-void execute_command(char *cmd, char **args, int *last_exit_status);
+int execute_single_command(char *command, char **arguments, int result, char *logical_operator);
+int execute_command(char *cmd, char **args);
 char *build_path(const char *_command[]);
-void relative_path(char *cmd, char **args, int *last_exit_status);
-void tokenize_input(char *input, int *last_exit_status);
+int relative_path(char *cmd, char **args);
+int tokenize_input(char *input);
 void _safe_free(void **ptr);
 
 #endif /*SHELL_H*/

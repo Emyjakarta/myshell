@@ -1,7 +1,8 @@
 #include "shell.h"
 
-void relative_path(char *cmd, char **args, int *last_exit_status)
+int relative_path(char *cmd, char **args)
 {
+	int last_exit_status = 0;
 	char command_path[PATH_MAX];
 	char *dir = NULL, *copy_path = getenv("PATH");
 	int status = 0, execve_status = 0;
@@ -60,11 +61,12 @@ void relative_path(char *cmd, char **args, int *last_exit_status)
 		waitpid(pid, &status, 0);
 		if (WIFEXITED(status))
 		{
-			*last_exit_status = WEXITSTATUS(status);
-			printf("After execution, last_exit_status = %d\n", *last_exit_status);
+			last_exit_status = WEXITSTATUS(status);
+			printf("After execution, last_exit_status = %d\n", last_exit_status);
 		}
 		else
-			*last_exit_status = -1;
+			last_exit_status = -1;
 	}
+	return (last_exit_status);
 	/*}*/
 }

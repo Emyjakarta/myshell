@@ -1,9 +1,10 @@
 #include "shell.h"
 bool new_dir_allocated = false;
 
-int builtin_handler(char *command, char **arguments, int *last_exit_status)
+int builtin_handler(char *command, char **arguments)
 {
 	int i = 0, result = 0;
+	/*int last_exit_status = 0;*/
 	/*if (strcmp(command, "&&") == 0) {
 	  if (*last_exit_status == 0) {
 	  builtin_handler(command, arguments, last_exit_status);
@@ -22,7 +23,6 @@ int builtin_handler(char *command, char **arguments, int *last_exit_status)
 		{NULL, NULL}
 	};
 	(void) command;
-	(void) last_exit_status;
 	for (i = 0; builtin[i].command != NULL; i++)
 	{
 		printf("Comparing command: %s with built-in: %s\n", command, builtin[i].command);
@@ -35,7 +35,7 @@ int builtin_handler(char *command, char **arguments, int *last_exit_status)
 				fprintf(stderr, "Error executing built in command: %s\n", command);
 				return (2);
 			}
-			return (1);
+			return (0);
 		}
 	}
 	printf("Command not found: %s\n", command);

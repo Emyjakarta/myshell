@@ -1,7 +1,8 @@
 #include "shell.h"
 
-void execute_command(char *cmd, char **args, int *last_exit_status)
+int execute_command(char *cmd, char **args)
 {
+	int last_exit_status = 0;
 	int status = 0, execve_status = 0;
 	pid_t pid;
 
@@ -38,15 +39,16 @@ void execute_command(char *cmd, char **args, int *last_exit_status)
 		{
 			waitpid(pid, &status, 0);
 			if (WIFEXITED(status))
-			{	*last_exit_status = WEXITSTATUS(status);
-				printf("After execution, last_exit_status = %d\n", *last_exit_status);
+			{	last_exit_status = WEXITSTATUS(status);
+				printf("After execution, last_exit_status = %d\n", last_exit_status);
 			}
 			else
 			{
 				fprintf(stderr, "%s: not found\n", args[0]);
-				*last_exit_status = -1;
+				last_exit_status = -1;
 			}
 		}
 	}
+	return (last_exit_status);
 	/*}*/
 }
