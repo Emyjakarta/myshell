@@ -136,25 +136,29 @@ int tokenize_input(char *input)
 		}
 		/*free(command_copy);*/
 		single_command = strtok_r(NULL, delim, &saveptr1);
-		index++;
+		/*index++;*/
 	}
 	return (last_exit_status);
 }
 
 int execute_single_command(char *command, char **arguments, int result, char *logical_operator)
 {
+	int b_result = 0, r_result = 0, e_result = 0;
 	printf("Before execution, last_exit_status = %d\n", result);
 	printf("Executing Command: %s\n", command);
 	printf("Logical operator: %s\n", logical_operator);
-	result = builtin_handler(command, arguments);
-	printf("result of builtin_handler: %d\n", result);
-	if (result == 1) {
+	b_result = builtin_handler(command, arguments);
+	printf("result of builtin_handler: %d\n", b_result);
+	if (b_result == 1) {
 		if (command != NULL && command[0] != '/') {
-			result = relative_path(command, arguments);
+			r_result = relative_path(command, arguments);
+			return (r_result);
 		} else {
-			result = execute_command(command, arguments);
+			e_result = execute_command(command, arguments);
+			return (e_result);
 		}
 		printf("After executing commands, result in execute_single_command: %d\n", result);
 	}
-	return (result);
+	else			
+		return (b_result);
 }

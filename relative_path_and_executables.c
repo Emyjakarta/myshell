@@ -8,18 +8,6 @@ int relative_path(char *cmd, char **args)
 	int status = 0, execve_status = 0, i = 0;
 	pid_t pid;
 
-	/*if (last_exit_status != NULL)
-	  {
-	  if (strcmp(cmd, "&&") == 0) {
-	  if (*last_exit_status == 0) {
-	  relative_path(cmd, args, last_exit_status);
-	  }
-	  } else if (strcmp(cmd, "||") == 0) {
-	  if (*last_exit_status != 0) {
-	  relative_path(cmd, args, last_exit_status);
-	  }
-	  }
-	  } else {*/
 	pid = fork();
 	if (pid < 0)
 	{
@@ -59,7 +47,6 @@ int relative_path(char *cmd, char **args)
 		}
 		fprintf(stderr, "%s: not found\n", args[0]);
 		exit(EXIT_FAILURE);
-		/*last_exit_status = 1;*/
 	}
 	else
 	{
@@ -73,5 +60,4 @@ int relative_path(char *cmd, char **args)
 			last_exit_status = -1;
 	}
 	return (last_exit_status);
-	/*}*/
 }
