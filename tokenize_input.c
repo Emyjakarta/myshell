@@ -8,12 +8,14 @@ int tokenize_input(char *input)
 	char *command_args[MAX_COMMAND_ARGS], *command_args_op[MAX_COMMAND_ARGS], *command_args_op_aft[MAX_COMMAND_ARGS];
 	char *arg = NULL, *single_command = NULL;
 	char *saveptr1 = NULL, *saveptr2 = NULL;
-	char *logical_operator = NULL;
+	/*char *logical_operator = NULL;*/
 	char *command_copy = NULL;
 	char *before_operator = NULL;
 	char *after_operator = NULL;
-	size_t operator_index = 0;
-	char *operator_location = NULL;
+	/*size_t operator_index = 0;*/
+	/*char *operator_location = NULL;*/
+	OperatorInfo *operators = NULL;
+	int op_index = 0;
 
 	single_command = strtok_r(input, delim, &saveptr1);
 	while (single_command != NULL && index < MAX_COMMAND_ARGS - 1)
@@ -21,8 +23,8 @@ int tokenize_input(char *input)
 		command_copy = strdup(single_command);
 		if (command_copy == NULL)
 			return (50);
-		logical_operator = obtain_operator(command_copy);
-		if (logical_operator == NULL)
+		operators = obtain_operators(command_copy);
+		if (operators == NULL)
 		{
 			printf("Next command: %s\n", saveptr1);
 			printf("single command: %s\nsaveptr1: %s\n", command_copy, saveptr1);
@@ -43,92 +45,101 @@ int tokenize_input(char *input)
 			{
 				printf("command_args[%d]: %s\n", i, command_args[i]);
 			}
-			last_exit_status = execute_single_command(command_args[0], command_args, last_exit_status, logical_operator);
+			last_exit_status = execute_single_command(command_args[0], command_args, last_exit_status, operators->operator);
 		}
-		else
+		/*else
 		{
 			operator_location = strstr(command_copy, logical_operator);
-		}
-		if (logical_operator != NULL)
+		}*/
+		if (operators != NULL)
 		{
-			before_operator = malloc(strlen(command_copy) + 1);
-			if (before_operator == NULL)
-				return (19);
-			after_operator = malloc(strlen(command_copy) + 1);
-			if (after_operator == NULL)
-				return (20);
-			operator_index = operator_location - command_copy;
-			if (operator_index > strlen(command_copy))
-				return (52);
-			strncpy(before_operator, command_copy, operator_index);
-			before_operator[operator_index] = '\0';
-			printf("before_operator: %s\n", before_operator);
-			if (operator_index + strlen(logical_operator) > strlen(command_copy))
-				return (53);
-			strncpy(after_operator, command_copy + operator_index + strlen(logical_operator), strlen(command_copy) - operator_index - strlen(logical_operator) + 1);
-			after_operator[strlen(command_copy) - operator_index - strlen(logical_operator)] = '\0';
-			printf("after_operator: %s\n", after_operator);
-			trim_spaces(before_operator);
-			trim_spaces(after_operator);
+			for (op_index = 0; operators[op_index].operator != NULL; op_index++) 
+			{
+				OperatorInfo current_operator = operators[op_index];
+				before_operator = malloc(current_operator.position + 1);
+				if (before_operator == NULL)
+					return (19);
+				after_operator = malloc(strlen(command_copy) - current_operator.position);
 
-			printf("Next command_op: %s\n", saveptr1);
-			printf("single command_op: %s\nsaveptr1: %s\n", command_copy, saveptr1);
-			arg_count_op = 0;
-			arg_token_op = strtok_r(before_operator, " \t", &saveptr2);
-			printf("arg_token_op: %s\nsaveptr2: %s\n", arg_token_op, saveptr2);
-			while (arg_token_op != NULL && arg_count_op < MAX_COMMAND_ARGS - 1)
-			{
-				if (strcmp(arg_token_op, "&&") == 0 || strcmp(arg_token_op, "||") == 0)
+				if (after_operator == NULL)
+					return (20);
+				/*operator_index = operator_location - command_copy;*/
+				/*if (operator_index > strlen(command_copy))
+				  return (52);*/
+				strncpy(before_operator, command_copy, current_operator.position);
+				before_operator[current_operator.position] = '\0';
+				printf("before_operator: %s\n", before_operator);
+				/*if (operator_index + strlen(logical_operator) > strlen(command_copy))
+				  return (53);*/
+				strncpy(after_operator, command_copy + current_operator.position + strlen(current_operator.operator), strlen(command_copy) - current_operator.position - strlen(current_operator.operator) + 1);
+				/*strncpy(after_operator, command_copy + operator_index + strlen(logical_operator), strlen(command_copy) - operator_index - strlen(logical_operator) + 1);*/
+				after_operator[strlen(command_copy) - current_operator.position - strlen(current_operator.operator)] = '\0';
+				/*after_operator[strlen(command_copy) - operator_index - strlen(logical_operator)] = '\0';*/
+				printf("after_operator: %s\n", after_operator);
+				trim_spaces(before_operator);
+				trim_spaces(after_operator);
+
+				printf("Next command_op: %s\n", saveptr1);
+				printf("single command_op: %s\nsaveptr1: %s\n", command_copy, saveptr1);
+				arg_count_op = 0;
+				arg_token_op = strtok_r(before_operator, " \t", &saveptr2);
+				printf("arg_token_op: %s\nsaveptr2: %s\n", arg_token_op, saveptr2);
+				while (arg_token_op != NULL && arg_count_op < MAX_COMMAND_ARGS - 1)
 				{
+					if (strcmp(arg_token_op, "&&") == 0 || strcmp(arg_token_op, "||") == 0)
+					{
+						arg_token_op = strtok_r(NULL, " \t", &saveptr2);
+						continue;
+					}
+					command_args_op[arg_count_op++] = strdup(arg_token_op);
 					arg_token_op = strtok_r(NULL, " \t", &saveptr2);
-					continue;
 				}
-				command_args_op[arg_count_op++] = strdup(arg_token_op);
-				arg_token_op = strtok_r(NULL, " \t", &saveptr2);
-			}
-			command_args_op[arg_count_op] = NULL;
-			arg_count_op_aft = 0;
-			command_args_op_aft[0] = NULL;
-			arg_token_op_aft = strtok_r(after_operator, " \t", &saveptr2);
-			printf("arg_token_op_aft: %s\nsaveptr2: %s\n", arg_token_op_aft, saveptr2);
-			while (arg_token_op_aft != NULL && arg_count_op_aft < MAX_COMMAND_ARGS - 1)
-			{
-				if (strcmp(arg_token_op_aft, "&&") == 0 || strcmp(arg_token_op_aft, "||") == 0)
+				command_args_op[arg_count_op] = NULL;
+				arg_count_op_aft = 0;
+				command_args_op_aft[0] = NULL;
+				arg_token_op_aft = strtok_r(after_operator, " \t", &saveptr2);
+				printf("arg_token_op_aft: %s\nsaveptr2: %s\n", arg_token_op_aft, saveptr2);
+				while (arg_token_op_aft != NULL && arg_count_op_aft < MAX_COMMAND_ARGS - 1)
 				{
+					if (strcmp(arg_token_op_aft, "&&") == 0 || strcmp(arg_token_op_aft, "||") == 0)
+					{
+						arg_token_op_aft = strtok_r(NULL, " \t", &saveptr2);
+						continue;
+					}
+					command_args_op_aft[arg_count_op_aft++] = strdup(arg_token_op_aft);
 					arg_token_op_aft = strtok_r(NULL, " \t", &saveptr2);
-					continue;
 				}
-				command_args_op_aft[arg_count_op_aft++] = strdup(arg_token_op_aft);
-				arg_token_op_aft = strtok_r(NULL, " \t", &saveptr2);
-			}
-			command_args_op_aft[arg_count_op_aft] = NULL;
-			printf("contents of the command_args_op_aft array after inner while loop:\n");
-			for (i = 0; i < arg_count_op_aft; i++)
-			{
-				printf("command_args_op_aft[%d]: %s\n", i, command_args_op_aft[i]);
-			}
-			if (strcmp(logical_operator, "&&") == 0)
-			{
-				printf("Execute command before '&&': %s\n", before_operator);
-				last_exit_status = execute_single_command(before_operator, command_args_op, last_exit_status, logical_operator);
-				if (last_exit_status == 0)
+				command_args_op_aft[arg_count_op_aft] = NULL;
+				printf("contents of the command_args_op_aft array after splitting into commands and arguments:\n");
+				for (i = 0; i < arg_count_op_aft; i++)
 				{
-					printf("Execute command after '&&': %s\n", after_operator);
-					last_exit_status = execute_single_command(after_operator, command_args_op_aft, last_exit_status, logical_operator);
+					printf("command_args_op_aft[%d]: %s\n", i, command_args_op_aft[i]);
 				}
-			}
-			else if (strcmp(logical_operator, "||") == 0)
-			{
-				printf("Execute command before '||': %s\n", before_operator);
-				last_exit_status = execute_single_command(before_operator, command_args_op, last_exit_status, logical_operator);
-				if (last_exit_status != 0)
+				if (strcmp(operators->operator, "&&") == 0)
 				{
-					printf("Execute command after '||': %s\n", after_operator);
-					last_exit_status = execute_single_command(after_operator, command_args_op_aft, last_exit_status, logical_operator);
+					printf("Execute command before '&&': %s\n", before_operator);
+					last_exit_status = execute_single_command(before_operator, command_args_op, last_exit_status, operators->operator);
+					if (last_exit_status == 0)
+					{
+						printf("Execute command after '&&': %s\n", after_operator);
+						last_exit_status = execute_single_command(after_operator, command_args_op_aft, last_exit_status, operators->operator);
+					}
 				}
+				else if (strcmp(operators->operator, "||") == 0)
+				{
+					printf("Execute command before '||': %s\n", before_operator);
+					last_exit_status = execute_single_command(before_operator, command_args_op, last_exit_status, operators->operator);
+					if (last_exit_status != 0)
+					{
+						printf("Execute command after '||': %s\n", after_operator);
+						last_exit_status = execute_single_command(after_operator, command_args_op_aft, last_exit_status, operators->operator);
+					}
+				}
+				free(before_operator);
+				free(after_operator);
+				free(command_copy);
 			}
-			free(before_operator);
-			free(after_operator);
+			free(operators);
 		}
 		for (i = 0; i < arg_count; i++) {
 			free(command_args[i]);

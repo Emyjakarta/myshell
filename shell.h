@@ -30,6 +30,11 @@ int _is_cd(const char *_command);
 char *_get_cd_path(const char *_command, char **arguments);
 int pwd_handler(char *command, char **arguments);
 
+typedef struct {
+	char *operator;
+	int position;
+} OperatorInfo;
+OperatorInfo *obtain_operators(char *str);
 void show_prompt(void);
 char _putcharshell(const char *str);
 void read_input(char *input);
@@ -40,7 +45,7 @@ char *build_path(const char *_command[]);
 int relative_path(char *cmd, char **args);
 int tokenize_input(char *input);
 void _safe_free(void **ptr);
-char *obtain_operator(char *str);
+/*char *obtain_operator(char *str);*/
 void trim_spaces(char *str);
 
 #endif /*SHELL_H*/
