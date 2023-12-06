@@ -29,7 +29,7 @@ int tokenize_input(char *input)
 			before_operator = command_copy;
 			after_operator = NULL;
 			printf("Next command: %s\n", saveptr1);
-			printf("single command: %s\nsaveptr1: %s\n", before_operator, saveptr1);
+			printf("single command(before_operator): %s\nsaveptr1: %s\n", before_operator, saveptr1);
 			arg_count = 0;
 			arg_token = strtok_r(before_operator, " \t", &saveptr2);
 			printf("arg_token: %s\nsaveptr2: %s\n", arg_token, saveptr2);
@@ -93,16 +93,20 @@ int tokenize_input(char *input)
 				{
 					printf("command_args_op_aft[%d]: %s\n", i, command_args_op_aft[i]);
 				}
-				if ((strcmp(current_operator.operator, "&&") == 0 && success == 0) ||
-						(strcmp(current_operator.operator, "||") == 0 && success != 0)) 
+				if ((strcmp(current_operator.operator, "&&") == 0 && success != 0) ||
+						(strcmp(current_operator.operator, "||") == 0 && success == 0)) 
+				{
+					break;
+				}
+				else
 				{
 					last_exit_status = execute_single_command(after_operator, command_args_op, last_exit_status, current_operator.operator);
 					break;  /*Exit the loop if executed after_operator*/
+					after_operator_copy = strdup(after_operator);
+					free(original_command_copy);
+					original_command_copy = after_operator_copy;/*Update command_copy for the next iteration*/
+					op_index++;
 				}
-				after_operator_copy = strdup(after_operator);
-				free(original_command_copy);
-				original_command_copy = after_operator_copy;/*Update command_copy for the next iteration*/
-				op_index++;
 			}
 			free(operators);
 		}
@@ -111,10 +115,13 @@ int tokenize_input(char *input)
 			free(command_args[i]);
 			command_args[i] = NULL;
 		}
-		free(command_copy);
+		/*free(command_copy);*/
 		single_command = strtok_r(NULL, delim, &saveptr1);
 		index++;
-
+		if (single_command == NULL)
+			perror("strtok_r");
+		else
+			command_copy = strdup(single_command);
 	}
 	return (last_exit_status);
 }
