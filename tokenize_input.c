@@ -105,14 +105,15 @@ int tokenize_input(char *input)
 				op_index++;
 			}
 			free(operators);
-			for (i = 0; i < arg_count; i++) 
-			{
-				free(command_args[i]);
-				command_args[i] = NULL;
-			}
-			free(command_copy);
-			single_command = strtok_r(NULL, delim, &saveptr1);
 		}
+		for (i = 0; i < arg_count; i++) 
+		{
+			free(command_args[i]);
+			command_args[i] = NULL;
+		}
+		free(command_copy);
+		single_command = strtok_r(NULL, delim, &saveptr1);
+		index++;
 
 	}
 	return (last_exit_status);
