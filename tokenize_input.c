@@ -104,7 +104,8 @@ int tokenize_input(char *input)
 					before_operator = (char *)malloc((operator_index + 1) * sizeof(char));
 					if (before_operator == NULL)
 						perror("malloc");
-					after_operator = (char *)malloc((strlen(operator_position + strlen(current_operator.operator)) + 1) * sizeof(char));
+					/*after_operator = (char *)malloc((strlen(operator_position + strlen(current_operator.operator)) + 1) * sizeof(char));*/
+					after_operator = (char *)malloc((strlen(original_command_copy) - operator_index - strlen(current_operator.operator) + 1) * sizeof(char));
 					if (after_operator == NULL)
 						perror("malloc");
 					/*Copy part of the string before the operator*/
@@ -125,31 +126,31 @@ int tokenize_input(char *input)
 				/*execute_single_command(before_operator, command_args_op, last_exit_status, current_operator.operator);*/
 				/*last_exit_status = execute_single_command(after_operator, command_args_op_aft, last_exit_status, current_operator.operator);*/
 
-				if (after_operator != NULL) 
-				{
+				/*if (after_operator != NULL) 
+				{*/
 					/*Calculate the length of the current command and the operator*/
 					/*command_length = strlen(before_operator);
 					  operator_length = strlen(current_operator.operator);*/
 
 					/*Move the after_operator pointer to the start of the next command*/
 					/*after_operator += command_length + operator_length;*/
-					after_operator = strtok_r(NULL, current_operator.operator, &saveptr1);
+					/*after_operator = strtok_r(NULL, current_operator.operator, &saveptr1);*/
 
 					/*Check if after_operator is not NULL*/
-					if (after_operator != NULL && *after_operator != '\0') 
-					{
+					/*if (after_operator != NULL && *after_operator != '\0') 
+					{*/
 						/*Trim leading spaces if any*/
-						while (*after_operator == ' ' || *after_operator == '\t') 
+						/*while (*after_operator == ' ' || *after_operator == '\t') 
 						{
 							after_operator++;
 						}
 					} 
 					else 
-					{
+					{*/
 						/*If after_operator is NULL or points to the end of string, there are no more commands*/
-						after_operator = NULL;
+						/*after_operator = NULL;
 					}
-				}
+				}*/
 				printf("before_operator: %s\n", before_operator);
 				printf("after_operator: %s\n", after_operator);
 				/*trim_spaces(after_operator);*/
