@@ -65,8 +65,10 @@ int tokenize_input(char *input)
 		}
 		else if (op_index <= total_operators)
 		{
-			while (operators[op_index].operator != NULL && operators[op_index].position >= 0)
+			printf("OP_INDEX B4 RECUR: %d\n", op_index);
+			while (operators[op_index].operator != NULL && operators[op_index].position >= 1)
 			{
+				printf("oP_index inside loop: %d\n", op_index);
 				original_command_copy = strdup(command_copy);
 				printf("original_command_copy: %s\n", original_command_copy);
 				operator_position = strstr(original_command_copy, current_operator.operator);
