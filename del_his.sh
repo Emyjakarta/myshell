@@ -1,2 +1,2 @@
 #!/bin/bash
-for i in {2161..2177}; do history -d $i; done
+for i in [1702-1703]; do history -d $i; done
