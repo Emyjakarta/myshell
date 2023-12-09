@@ -14,7 +14,7 @@ int tokenize_input(char *input)
 	OperatorInfo *operators = NULL;
 	int op_index = 0;
 	char *original_command_copy = NULL;
-	int success = 0, total_operators = 0;
+	int /*success = 0,*/ total_operators = 0;
 	char *operator_position = NULL;
 	int operator_index = 0;
 	int length_after_operator = 0;
@@ -119,7 +119,7 @@ int tokenize_input(char *input)
 						{
 							printf("command_args_op[%d]: %s\n", i, command_args_op[i]);
 						}
-						success = execute_single_command(before_operator, command_args_op, last_exit_status, current_operator.operator);
+						last_exit_status = execute_single_command(before_operator, command_args_op, last_exit_status, current_operator.operator);
 						arg_count_op_aft = 0;
 						command_args_op_aft[0] = NULL;
 						arg_token_op_aft = strtok_r(after_operator, " \t", &saveptr2);
@@ -129,9 +129,11 @@ int tokenize_input(char *input)
 							if ((strcmp(current_operator.operator, "&&") == 0 && last_exit_status != 0) ||
 									(strcmp(current_operator.operator, "||") == 0 && last_exit_status == 0))
 							{
-								break; /*If logical condition met, exit the loop*/
+								free(after_operator);
+								command_args_op_aft[0] = NULL;
+								return (last_exit_status); /*If logical condition met, exit the loop*/
 							}
-							if (strcmp(arg_token_op_aft, "&&") == 0 || strcmp(arg_token_op_aft, "||") == 0)
+							else if (strcmp(arg_token_op_aft, "&&") == 0 || strcmp(arg_token_op_aft, "||") == 0)
 							{
 								/*Execute the current command with its arguments*/
 								command_args_op_aft[arg_count_op_aft] = NULL; /*Null-terminate the command arguments*/
@@ -176,11 +178,13 @@ int tokenize_input(char *input)
 							execute_single_command(before_operator, command_args_op_aft, last_exit_status, current_operator.operator);
 							break;
 						}
-						if ((strcmp(current_operator.operator, "&&") == 0 && success != 0) ||
-								(strcmp(current_operator.operator, "||") == 0 && success == 0)) 
+						/*if ((strcmp(current_operator.operator, "&&") == 0 && last_exit_status != 0) ||
+								(strcmp(current_operator.operator, "||") == 0 && last_exit_status == 0)) 
 						{
+							free(after_operator);
+							command_args_op_aft[0] = NULL;
 							break;
-						}
+						}*/
 						else
 						{
 							tokenize_input(after_operator);
