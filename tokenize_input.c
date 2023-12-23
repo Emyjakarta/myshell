@@ -149,8 +149,13 @@ void tokenize_input(char *input, int *last_exit_status)
 						{
 							printf("command_args_op[%d]: %s\n", i, command_args_op[i]);
 						}
-						execute_single_command(command_args_op[0], command_args_op, last_exit_status, current_operator.operator);
-						command_args_op[0] = NULL;
+						execute_single_command(command_args_op[0], command_args_op, &(*last_exit_status), current_operator.operator);
+						/*command_args_op[0] = NULL;*/
+						for (i = 0; i < arg_count_op; i++) {
+							free(command_args_op[i]); /*Free the memory allocated by strdup*/
+							command_args_op[i] = NULL; /*Set each element to NULL*/
+						}
+						arg_count_op = 0; /*Reset the count*/
 						arg_count_op_aft = 0;
 						command_args_op_aft[0] = NULL;
 						arg_token_op_aft = strtok_r(after_operator, " \t", &saveptr2);
@@ -191,7 +196,12 @@ void tokenize_input(char *input, int *last_exit_status)
 									printf("command_args_op_aft(AFT) just after finding operator and immediately before execution[%d]: %s\n", i, command_args_op_aft[i]);
 								}
 								execute_single_command(command_args_op_aft[0], command_args_op_aft, &(*last_exit_status), current_operator.operator);
-								command_args_op_aft[0] = NULL;
+								/*command_args_op_aft[0] = NULL;*/
+								for (i = 0; i < arg_count_op_aft; i++) {
+									free(command_args_op_aft[i]); /*Free the memory allocated by strdup*/
+									command_args_op_aft[i] = NULL; /*Set each element to NULL*/
+								}
+								/*arg_count_op_aft = 0;*/ /*Reset the count*/
 								/*if ((strcmp(current_operator.operator, "&&") == 0 && last_exit_status != 0) ||
 								  (strcmp(current_operator.operator, "||") == 0 && last_exit_status == 0))
 								  {
@@ -207,23 +217,28 @@ void tokenize_input(char *input, int *last_exit_status)
 							{
 								/*Add the token to the current command's arguments*/
 								command_args_op_aft[arg_count_op_aft++] = strdup(arg_token_op_aft);
+								arg_token_op_aft = strtok_r(NULL, " \t", &saveptr2);
 								printf("contents of the command_args_op_aft(AFT) array after starting a new command:\n");
 								for (i = 0; i < arg_count_op_aft; i++)
 								{
 									printf("command_args_op_aft(AFT) just after starting a new command[%d]: %s\n", i, command_args_op_aft[i]);
 								}
 							}
-
-							arg_token_op_aft = strtok_r(NULL, " \t", &saveptr2);
-							printf("contents of the command_args_op_aft(AFT) array before moving to the next token:\n");
-							command_args_op_aft[arg_count_op_aft] = NULL;
-							for (i = 0; i < arg_count_op_aft; i++)
-							{
-								printf("command_args_op_aft(AFT) just BEFORE moving to the next token [%d]: %s\n", i, command_args_op_aft[i]);
-							}
-							execute_single_command(command_args_op_aft[0], command_args_op_aft, &(*last_exit_status), current_operator.operator);
-							command_args_op_aft[0] = NULL;
 						}
+						command_args_op_aft[arg_count_op_aft] = NULL;
+
+						printf("contents of the command_args_op_aft(AFT) array before moving to the next command:\n");
+						for (i = 0; i < arg_count_op_aft; i++)
+						{
+							printf("command_args_op_aft(AFT) just BEFORE moving to the next command [%d]: %s\n", i, command_args_op_aft[i]);
+						}
+						execute_single_command(command_args_op_aft[0], command_args_op_aft, &(*last_exit_status), current_operator.operator);
+						/*command_args_op_aft[0] = NULL;*/
+						for (i = 0; i < arg_count_op_aft; i++) {
+							free(command_args_op_aft[i]); /*Free the memory allocated by strdup*/
+							command_args_op_aft[i] = NULL; /*Set each element to NULL*/
+						}
+						arg_count_op_aft = 0; /*Reset the count*/
 
 						/*Execute the last command if there is one*/
 						/*if (arg_count_op_aft > 0)
