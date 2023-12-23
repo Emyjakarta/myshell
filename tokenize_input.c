@@ -37,8 +37,8 @@ void tokenize_input(char *input, int *last_exit_status)
 	current_operator = operators[op_index];
 	while (single_command != NULL && index < MAX_COMMAND_ARGS - 1)
 	{
-		 execute_command_without_operator(command_copy, last_exit_status, current_operator);
-		 /*single_command = strtok_r(NULL, delim, &saveptr1);*/
+		execute_command_without_operator(command_copy, last_exit_status, current_operator);
+		/*single_command = strtok_r(NULL, delim, &saveptr1);*/
 		if (current_operator.operator != NULL)
 		{
 			/*printf("j: %d\ntotal_operators: %d\n", j, total_operators);*/
@@ -215,11 +215,14 @@ void tokenize_input(char *input, int *last_exit_status)
 							}
 
 							arg_token_op_aft = strtok_r(NULL, " \t", &saveptr2);
-							printf("contents of the command_args_op_aft(AFT) array before moving to the next command:\n");
+							printf("contents of the command_args_op_aft(AFT) array before moving to the next token:\n");
+							command_args_op_aft[arg_count_op_aft] = NULL;
 							for (i = 0; i < arg_count_op_aft; i++)
 							{
-								printf("command_args_op_aft(AFT) just BEFORE moving to the next command [%d]: %s\n", i, command_args_op_aft[i]);
+								printf("command_args_op_aft(AFT) just BEFORE moving to the next token [%d]: %s\n", i, command_args_op_aft[i]);
 							}
+							execute_single_command(command_args_op_aft[0], command_args_op_aft, &(*last_exit_status), current_operator.operator);
+							command_args_op_aft[0] = NULL;
 						}
 
 						/*Execute the last command if there is one*/
@@ -256,7 +259,7 @@ void tokenize_input(char *input, int *last_exit_status)
 				operators = NULL;
 				operator_position = NULL;
 				/*op_index++;
-				current_operator = operators[op_index];*/
+				  current_operator = operators[op_index];*/
 			}
 		}
 		single_command = strtok_r(NULL, delim, &saveptr1);
