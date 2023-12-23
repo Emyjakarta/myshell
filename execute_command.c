@@ -2,7 +2,7 @@
 
 int execute_command(char *cmd, char **args)
 {
-	int last_exit_status;
+	int last_exit_status, signal_number;
 	int status = 0, execve_status = 0;
 	pid_t pid;
 	pid_t return_pid; 
@@ -50,13 +50,14 @@ int execute_command(char *cmd, char **args)
 				perror("waitpid");
 			printf("Before WIFEXITED(status) check\nstatus: %d\nWEXITSTATUS(status): %d\n", status, WEXITSTATUS(status));
 			if (WIFEXITED(status))
-			{	last_exit_status = WEXITSTATUS(status);
+			{	
+				last_exit_status = WEXITSTATUS(status);
 				printf("After execution, last_exit_status = %d\n", last_exit_status);
 			}
 			else
 			{
-				fprintf(stderr, "%s: not found\n", args[0]);
-				last_exit_status = 5;
+				signal_number = WTERMSIG(status);
+				printf("Process was terminated by signal %d\n", signal_number);
 			}
 		}
 	}

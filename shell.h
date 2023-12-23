@@ -39,11 +39,12 @@ void show_prompt(void);
 char _putcharshell(const char *str);
 void read_input(char *input);
 void remove_quotes(char *str);
-int execute_single_command(char *command, char **arguments, int last_exit_status, char *logical_operator);
+void execute_command_without_operator(char *command_copy, int *last_exit_status, OperatorInfo current_operator);
+void execute_single_command(char *command, char **arguments, int *last_exit_status, char *logical_operator);
 int execute_command(char *cmd, char **args);
 char *build_path(const char *_command);
 int relative_path(char *cmd, char **args);
-int tokenize_input(char *input);
+void tokenize_input(char *input, int *last_exit_status);
 void _safe_free(void **ptr);
 /*char *obtain_operator(char *str);*/
 void trim_spaces(char *str);
