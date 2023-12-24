@@ -19,6 +19,8 @@ void tokenize_input(char *input, int *last_exit_status)
 	int length_after_operator = 0;
 	char *current_command = NULL;
 	char *ops_position = NULL;
+	char *cur_operator = NULL;
+	int executed_commands_count = 0;
 	OperatorInfo current_operator = {0};
 
 	single_command = strtok_r(input, delim, &saveptr1);
@@ -33,21 +35,32 @@ void tokenize_input(char *input, int *last_exit_status)
 		printf("op_index after incrementing op_index and total_operators: %d\n", op_index);
 		printf("operators[op_index].operator after incrementing op_index and total_operators: %s\n", operators[op_index].operator);
 	}
+	printf("total_operators(after counting): %d\n", total_operators);
 	op_index = 0;
 	current_operator = operators[op_index];
 	while (single_command != NULL && index < MAX_COMMAND_ARGS - 1)
 	{
 		if (current_operator.operator == NULL || current_operator.operator[0] == '\0')
 		{
-			execute_command_without_operator(command_copy, last_exit_status, current_operator);
+			if (executed_commands_count == total_operators + 1)
+			{
+				break;
+			}
+			cur_operator = current_operator.operator;
+			printf("cur_operator: %s\n", cur_operator);
+			execute_command_without_operator(command_copy, &(*last_exit_status), cur_operator);
 		}
 		/*single_command = strtok_r(NULL, delim, &saveptr1);*/
 		else if (current_operator.operator != NULL)
 		{
+			printf("executed_commands_count before check: %d\n", executed_commands_count);
 			/*printf("j: %d\ntotal_operators: %d\n", j, total_operators);*/
 			if (operators[op_index].position == total_operators)
 			{
-				break;
+				if (executed_commands_count == total_operators + 1)
+				{
+					break;
+				}
 			}
 			printf("OP_INDEX B4 RECUR: %d\n", op_index);
 			/*if ((strcmp(current_operator.operator, "&&") == 0 && last_exit_status != 0) ||
@@ -164,6 +177,8 @@ void tokenize_input(char *input, int *last_exit_status)
 							printf("command_args_op[%d]: %s\n", i, command_args_op[i]);
 						}
 						execute_single_command(command_args_op[0], command_args_op, &(*last_exit_status), current_operator.operator);
+						executed_commands_count++;
+						printf("executed_commands_count(after executing the first command before logical operator and incrementing the count): %d\n", executed_commands_count);
 						/*command_args_op[0] = NULL;*/
 						for (i = 0; i < arg_count_op; i++) {
 							free(command_args_op[i]); /*Free the memory allocated by strdup*/
@@ -213,6 +228,7 @@ void tokenize_input(char *input, int *last_exit_status)
 									printf("command_args_op_aft(AFT) just after finding operator and immediately before execution[%d]: %s\n", i, command_args_op_aft[i]);
 								}
 								execute_single_command(command_args_op_aft[0], command_args_op_aft, &(*last_exit_status), current_operator.operator);
+								/*executed_commands_count++;*/
 								/*command_args_op_aft[0] = NULL;*/
 								for (i = 0; i < arg_count_op_aft; i++) {
 									free(command_args_op_aft[i]); /*Free the memory allocated by strdup*/
@@ -258,6 +274,8 @@ void tokenize_input(char *input, int *last_exit_status)
 							printf("command_args_op_aft(AFT) just BEFORE moving to the next command [%d]: %s\n", i, command_args_op_aft[i]);
 						}
 						execute_single_command(command_args_op_aft[0], command_args_op_aft, &(*last_exit_status), current_operator.operator);
+						executed_commands_count++;
+						 printf("executed_commands_count(after executing the first command after logical operator(second command) and incrementing the count): %d\n", executed_commands_count);
 						/*command_args_op_aft[0] = NULL;*/
 						for (i = 0; i < arg_count_op_aft; i++) {
 							free(command_args_op_aft[i]); /*Free the memory allocated by strdup*/
@@ -284,8 +302,16 @@ void tokenize_input(char *input, int *last_exit_status)
 						  command_args_op_aft[0] = NULL;
 						  return (last_exit_status);
 						  }*/
-						tokenize_input(after_operator, &(*last_exit_status));
-						printf("after_operator(after recursively calling tokenize_input: %s\n", after_operator);
+						printf("total_operators before recursively calling tokenize_input: %d\n", total_operators);
+						if (executed_commands_count == total_operators + 1)
+						{
+							break;
+						}
+						else
+						{
+							tokenize_input(after_operator, &(*last_exit_status));
+							printf("after_operator(after recursively calling tokenize_input: %s\n", after_operator);
+						}
 						operator_index++;
 						op_index++;
 						current_operator = operators[operator_index];
@@ -313,14 +339,12 @@ void tokenize_input(char *input, int *last_exit_status)
 	}
 	/*return (last_exit_status);*/
 }
-void execute_command_without_operator(char *command_copy, int *last_exit_status, OperatorInfo current_operator)
+void execute_command_without_operator(char *command_copy, int *last_exit_status, char *cur_operator)
 {
 	char *before_operator, *arg_token, *command_args[MAX_COMMAND_ARGS];
 	char *saveptr1 = NULL, *saveptr2 = NULL, *arg;
 	int arg_count, i;
 
-	if (current_operator.operator == NULL || current_operator.operator[0] == '\0')
-	{
 		before_operator = command_copy;
 		printf("Next command(for execute_command_without_operator): %s\n", saveptr1);
 		printf("command(before_operator for execute_command_without_operator): %s\nsaveptr1: %s\n", before_operator, saveptr1);
@@ -342,8 +366,7 @@ void execute_command_without_operator(char *command_copy, int *last_exit_status,
 		{
 			printf("command_args[%d] for execute_command_without_operator: %s\n", i, command_args[i]);
 		}
-		execute_single_command(command_args[0], command_args, last_exit_status, current_operator.operator);
-	}
+		execute_single_command(command_args[0], command_args, &(*last_exit_status), cur_operator);
 }
 void execute_single_command(char *command, char **arguments, int *last_exit_status, char *logical_operator)
 {
