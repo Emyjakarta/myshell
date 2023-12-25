@@ -72,7 +72,7 @@ void process_commands_with_operators(OperatorInfo *operators, int *last_exit_sta
 		operator_position = strstr(original_command_copy, current_operator->operator);
 
 		if (operator_position != NULL) {
-			process_operator_occurrences(&executed_commands_count, total_operators, operators, &(*last_exit_status), command_copy, *current_operator, original_command_copy, operator_position);
+			process_operator_occurrences(&executed_commands_count, op_index, total_operators, operators, &(*last_exit_status), command_copy, *current_operator, original_command_copy, operator_position);
 		}
 		/*op_index++;*/
 		cleanup(operators);
@@ -86,7 +86,7 @@ char *duplicate_command(char *command) {
 char *find_operator_position(char *original_command_copy, char *current_operator) {
 	return strstr(original_command_copy, current_operator);
 }
-void process_operator_occurrences(int *executed_commands_count, int total_operators, OperatorInfo *operators, int *last_exit_status, char **command_copy, OperatorInfo current_operator, char *original_command_copy, char *operator_position) {
+void process_operator_occurrences(int *executed_commands_count, int op_index, int total_operators, OperatorInfo *operators, int *last_exit_status, char **command_copy, OperatorInfo current_operator, char *original_command_copy, char *operator_position) {
 	char *current_command = original_command_copy;
 	int operator_index = 0;
 	char *ops_position = NULL;
@@ -113,7 +113,7 @@ void process_operator_occurrences(int *executed_commands_count, int total_operat
 			tokenize_and_process_after_operator(after_operator, current_operator.operator, &(*last_exit_status));
 			/*tokenize_and_process_after_operator2(&(*last_exit_status), command_copy, current_operator, after_operator);*/
 		}
-		update_indices_pointers(&operator_index, &current_operator, operators, &current_command, &ops_position);
+		update_indices_pointers(&operator_index, &op_index, &current_operator, operators, &current_command, &ops_position);
 
 		/*free(before_operator);
 		  free(after_operator);*/
@@ -142,8 +142,9 @@ char *extract_after_operator(char *current_command, int operator_index, char *op
 	after_operator[length_after_operator] = '\0';
 	return after_operator;
 }
-void update_indices_pointers(int *operator_index, OperatorInfo *current_operator, OperatorInfo *operators, char **current_command, char **ops_position) {
+void update_indices_pointers(int *operator_index, int *op_index, OperatorInfo *current_operator, OperatorInfo *operators, char **current_command, char **ops_position) {
 	(*operator_index)++;
+	(*op_index)++;
 	(*current_operator) = operators[*operator_index];
 	(*current_command) = (*ops_position) + strlen((*current_operator).operator);
 }
