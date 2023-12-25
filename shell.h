@@ -50,7 +50,7 @@ void tokenize_and_process_after_operator(char *after_operator, char *opera, int 
 void tokenize_and_process_after_operator2(int *last_exit_status, char **command_copy, OperatorInfo current_operator, char *after_operator);
 void update_indices_pointers(int *operator_index, OperatorInfo *current_operator, OperatorInfo *operators, char **current_command, char **ops_position);
 char *extract_before_operator(char *current_command, int operator_index);
-char *extract_after_operator(char *operator_position, char *current_operator);
+char *extract_after_operator(char *current_command, int operator_index, char *operator_position, char *current_operator);
 void process_operator_occurrences(int *executed_commands_count, int total_operators, OperatorInfo *operators, int *last_exit_status, char **command_copy, OperatorInfo current_operator, char *original_command_copy, char *operator_position);
 char *find_operator_position(char *original_command_copy, char *current_operator);
 char *duplicate_command(char *command);

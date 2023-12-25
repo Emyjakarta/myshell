@@ -74,9 +74,10 @@ void process_commands_with_operators(OperatorInfo *operators, int *last_exit_sta
 		if (operator_position != NULL) {
 			process_operator_occurrences(&executed_commands_count, total_operators, operators, &(*last_exit_status), command_copy, *current_operator, original_command_copy, operator_position);
 		}
-		op_index++;
+		/*op_index++;*/
+		cleanup(operators);
+		operator_position = NULL;
 	}
-	cleanup(operators);
 }
 char *duplicate_command(char *command) {
 	return strdup(command);
@@ -94,28 +95,30 @@ void process_operator_occurrences(int *executed_commands_count, int total_operat
 	/*char *opera = current_operator.operator;*/
 	/*(void) operators;*/
 	(void) operator_position;
+	(void) command_copy;
 
 	while ((ops_position = strstr(current_command, current_operator.operator)) != NULL) {
 		operator_index = ops_position - current_command;
 		before_operator = extract_before_operator(current_command, operator_index);
-		after_operator = extract_after_operator(ops_position, current_operator.operator);
+		after_operator = extract_after_operator(current_command, operator_index, operator_position, current_operator.operator);
 
 		printf("Processing before_operator: %s\n", before_operator);
 		tokenize_and_process_before_operator(before_operator, &(*last_exit_status), current_operator.operator);
 		printf("Processing after_operator: %s\n", after_operator);
 		tokenize_and_process_after_operator(after_operator, current_operator.operator, &(*last_exit_status));
 
+		if (*executed_commands_count == total_operators + 1) {
+			return;
+		} else {
+			tokenize_and_process_after_operator(after_operator, current_operator.operator, &(*last_exit_status));
+			/*tokenize_and_process_after_operator2(&(*last_exit_status), command_copy, current_operator, after_operator);*/
+		}
 		update_indices_pointers(&operator_index, &current_operator, operators, &current_command, &ops_position);
 
 		/*free(before_operator);
 		  free(after_operator);*/
 	}
 
-	if (*executed_commands_count == total_operators + 1) {
-		return;
-	} else {
-		tokenize_and_process_after_operator2(&(*last_exit_status), command_copy, current_operator, after_operator);
-	}
 	/*operator_index++;
 	  op_index++;
 	  current_operator = operators[operator_index];
@@ -130,8 +133,8 @@ char *extract_before_operator(char *current_command, int operator_index) {
 	before_operator[operator_index] = '\0';
 	return before_operator;
 }
-char *extract_after_operator(char *operator_position, char *current_operator) {
-	int length_after_operator = strlen(operator_position + strlen(current_operator));
+char *extract_after_operator(char *current_command, int operator_index, char *operator_position, char *current_operator) {
+	int length_after_operator = strlen(current_command) - operator_index - strlen(current_operator);
 	char *after_operator = (char *)malloc((length_after_operator + 1) * sizeof(char));
 	if (after_operator == NULL)
 		perror("malloc");
