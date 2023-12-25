@@ -21,6 +21,7 @@ void tokenize_input(char *input, int *last_exit_status)
 	int index = 0; 
 	char *saveptr1 = NULL; 
 	/*saveptr2 = NULL;*/
+	char *copy_input = strdup(input);
 	char *command_copy = NULL;
 	/*char *before_operator = NULL;
 	  char *after_operator = NULL;*/
@@ -37,9 +38,18 @@ void tokenize_input(char *input, int *last_exit_status)
 	char *cur_operator = NULL;
 	OperatorInfo current_operator = {0};
 
-	single_command = strtok_r(input, delim, &saveptr1);
+	single_command = strtok_r(copy_input, delim, &saveptr1);
 	command_copy = strdup(single_command);
-	operators = obtain_operators(command_copy);
+	printf("command_copy before NULL check: %s\n", command_copy);
+	if (command_copy[strlen(command_copy)] == '\0')
+	{
+		operators = obtain_operators(command_copy);
+	}
+	else
+	{
+		perror("command_copy is not NULL-terminated\n");
+		return;
+	}
 	current_operator = operators[op_index];
 	/*total_operators = count_operators(operators);*/
 	while (single_command != NULL && index < MAX_COMMAND_ARGS - 1)
@@ -60,19 +70,20 @@ void tokenize_input(char *input, int *last_exit_status)
 			command_copy = strdup(single_command);
 	}
 }
+int executed_commands_count;
 void process_commands_with_operators(OperatorInfo *operators, int *last_exit_status, char **command_copy, OperatorInfo *current_operator) {
 	int op_index = 0;
-	int executed_commands_count = 0;
 	int total_operators = count_operators(operators);
 	char *original_command_copy = NULL;
 	char *operator_position = NULL;
+	executed_commands_count = 0;
 
 	while (operators[op_index].operator != NULL) {
 		original_command_copy = strdup(*command_copy);
 		operator_position = strstr(original_command_copy, current_operator->operator);
 
 		if (operator_position != NULL) {
-			process_operator_occurrences(&executed_commands_count, op_index, total_operators, operators, &(*last_exit_status), command_copy, *current_operator, original_command_copy, operator_position);
+			process_operator_occurrences(&executed_commands_count, op_index, total_operators, operators, &(*last_exit_status), *current_operator, original_command_copy, operator_position);
 		}
 		/*op_index++;*/
 		cleanup(operators);
@@ -86,16 +97,15 @@ char *duplicate_command(char *command) {
 char *find_operator_position(char *original_command_copy, char *current_operator) {
 	return strstr(original_command_copy, current_operator);
 }
-void process_operator_occurrences(int *executed_commands_count, int op_index, int total_operators, OperatorInfo *operators, int *last_exit_status, char **command_copy, OperatorInfo current_operator, char *original_command_copy, char *operator_position) {
+void process_operator_occurrences(int *executed_commands_count, int op_index, int total_operators, OperatorInfo *operators, int *last_exit_status, OperatorInfo current_operator, char *original_command_copy, char *operator_position) {
 	char *current_command = original_command_copy;
 	int operator_index = 0;
 	char *ops_position = NULL;
 	char *before_operator = NULL;
 	char *after_operator = NULL;
+	(void) operator_position;
 	/*char *opera = current_operator.operator;*/
 	/*(void) operators;*/
-	(void) operator_position;
-	(void) command_copy;
 
 	while ((ops_position = strstr(current_command, current_operator.operator)) != NULL) {
 		operator_index = ops_position - current_command;
@@ -106,14 +116,18 @@ void process_operator_occurrences(int *executed_commands_count, int op_index, in
 		tokenize_and_process_before_operator(before_operator, &(*last_exit_status), current_operator.operator);
 		printf("Processing after_operator: %s\n", after_operator);
 		tokenize_and_process_after_operator(after_operator, current_operator.operator, &(*last_exit_status));
+		printf("after_operator(after calling tokenize_and_process_after_operator): %s\n", after_operator);
 
 		if (*executed_commands_count == total_operators + 1) {
 			return;
 		} else {
 			tokenize_and_process_after_operator(after_operator, current_operator.operator, &(*last_exit_status));
+			printf("after_operator(after calling tokenize_and_process_after_operator) in the else block: %s\n", after_operator);
 			/*tokenize_and_process_after_operator2(&(*last_exit_status), command_copy, current_operator, after_operator);*/
 		}
+		printf("Before update\noperator_index: %d\nop_index: %d\ncurrent_operator.operator: %s\ncurrent_command: %s\n", operator_index, op_index, current_operator.operator, current_command);
 		update_indices_pointers(&operator_index, &op_index, &current_operator, operators, &current_command, &ops_position);
+		printf("After update\noperator_index: %d\nop_index: %d\ncurrent_operator.operator: %s\ncurrent_command: %s\n", operator_index, op_index, current_operator.operator, current_command);
 
 		/*free(before_operator);
 		  free(after_operator);*/
@@ -146,7 +160,10 @@ void update_indices_pointers(int *operator_index, int *op_index, OperatorInfo *c
 	(*operator_index)++;
 	(*op_index)++;
 	(*current_operator) = operators[*operator_index];
-	(*current_command) = (*ops_position) + strlen((*current_operator).operator);
+	if ((*current_operator).operator == NULL)
+		return;
+	else
+		(*current_command) = (*ops_position) + strlen((*current_operator).operator);
 }
 void tokenize_and_process_after_operator2(int *last_exit_status, char **command_copy, OperatorInfo current_operator, char *after_operator) {
 	int arg_count_op_aft = 0;
@@ -225,9 +242,41 @@ void tokenize_and_process_after_operator(char *after_operator, char *opera, int 
 	char *command_args_op_aft[MAX_COMMAND_ARGS];
 	int arg_count_op_aft = 0;
 	int i;
+	int op_index = 0;
+	int executed_commands_count = 0;
+	OperatorInfo *operators = NULL;
+	OperatorInfo current_operator = {0};
+	int total_operators = 0;
+	char *operator_position = NULL;
 
+	if (after_operator[strlen(after_operator)] == '\0')
+	{
+		operators = obtain_operators(after_operator);
+	}
+	else
+	{
+		perror("command_copy is not NULL-terminated\n");
+		return;
+	}
+	current_operator = operators[op_index];
+	total_operators = count_operators(operators);
+	if (after_operator == NULL || current_operator.operator == NULL)
+	{
+		return;
+	}
+	operator_position = strstr(after_operator, current_operator.operator);
+
+	trim_spaces(after_operator);
+	printf("after_operator(after trimming): %s\n", after_operator);
+	printf("current_operator.operator(after trimming after_operator): %s\n", current_operator.operator);
+	printf("total_operators(after trimming after_operator): %d\n", total_operators);
+	process_operator_occurrences(&executed_commands_count, op_index, total_operators, operators, &(*last_exit_status), current_operator, after_operator, operator_position);
+	printf("after_operator(after calling process_operator_occurences): %s\n", after_operator);
 	command_args_op_aft[0] = NULL;
+	printf("after_operator before tokenizing: %s\n", after_operator);
 	arg_token_op_aft = strtok_r(after_operator, " \t", &saveptr2);
+	printf("arg_token_op_aft after tokenizing after_operator: %s\n", arg_token_op_aft);
+	printf("opera after tokenizing after_operator: %s\n", opera);
 
 	while (arg_token_op_aft != NULL && arg_count_op_aft < MAX_COMMAND_ARGS - 1) {
 		if ((strcmp(opera, "&&") == 0 && *last_exit_status != 0) ||
@@ -239,17 +288,26 @@ void tokenize_and_process_after_operator(char *after_operator, char *opera, int 
 			}
 			return; /*If logical condition met, exit the loop*/
 		} else {
+			printf("arg_token_op_aft in the else block: %s\n", arg_token_op_aft);
 			command_args_op_aft[arg_count_op_aft] = strdup(arg_token_op_aft);
+			printf("Contents of the command_args_op_aft array before calling strtok_r:\n");
+			for (i = 0; i < arg_count_op_aft; i++) {
+				printf("command_args_op_aft[%d]: %s\n", i, command_args_op_aft[i]);
+			}
 			if (command_args_op_aft[arg_count_op_aft] == NULL) {
 				perror("strdup");
 				exit(EXIT_FAILURE);
 			}
 			arg_token_op_aft = strtok_r(NULL, " \t", &saveptr2);
+			arg_count_op_aft++;
+			/*execute_single_command(command_args_op_aft[0], command_args_op_aft, last_exit_status, opera);*/
 		}
-		arg_count_op_aft++;
+		/*command_args_op_aft[arg_count_op_aft] = NULL;*/
+		/*arg_count_op_aft++;*/
+		command_args_op_aft[arg_count_op_aft] = NULL;
 	}
 
-	command_args_op_aft[arg_count_op_aft] = NULL;
+	/*command_args_op_aft[arg_count_op_aft] = NULL;*/
 
 	printf("Contents of the command_args_op_aft array before executing the command:\n");
 	for (i = 0; i < arg_count_op_aft; i++) {
