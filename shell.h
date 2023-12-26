@@ -47,6 +47,7 @@ int relative_path(char *cmd, char **args);
 void tokenize_input(char *input, int *last_exit_status);
 void tokenize_and_process_before_operator(char *before_operator, int *last_exit_status, char *current_operator);
 void tokenize_and_process_after_operator(char *after_operator, char *opera, int *last_exit_status);
+void tokenize_and_process_last_command(char *after_operator, int *last_exit_status, char *current_operator);
 void tokenize_and_process_after_operator2(int *last_exit_status, char **command_copy, OperatorInfo current_operator, char *after_operator);
 void update_indices_pointers(int *operator_index, int *op_index, OperatorInfo *current_operator, OperatorInfo *operators, char **current_command, char **ops_position);
 char *extract_before_operator(char *current_command, int operator_index);
