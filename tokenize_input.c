@@ -73,6 +73,10 @@ void tokenize_input(char *input, int *last_exit_status)
 		else
 			command_copy = strdup(single_command);
 	}
+	printf("command_copy after while loop(tokenize_input) before free: %s\n", command_copy);
+	free(command_copy);
+	command_copy = NULL;
+	printf("command_copy after while loop(tokenize_input) after free: %s\n", command_copy);
 }
 void process_commands_with_operators(OperatorInfo *operators, int *last_exit_status, char **command_copy, OperatorInfo *current_operator) {
 	int op_index = 0;
@@ -111,6 +115,10 @@ void process_commands_with_operators(OperatorInfo *operators, int *last_exit_sta
 		/*free(command_copy);
 		  command_copy = NULL;*/
 	}
+	printf("original_command_copy(before free) in process_commands_with_operators: %s\n", original_command_copy);
+	free(original_command_copy);
+	original_command_copy = NULL;
+	printf("original_command_copy(after free) in process_commands_with_operators: %s\n", original_command_copy);
 }
 char *duplicate_command(char *command) {
 	return strdup(command);
@@ -279,15 +287,6 @@ void tokenize_and_process_before_operator(char *before_operator, int *last_exit_
 	trim_spaces(before_operator);
 	arg_token_op = strtok_r(before_operator, " \t", &saveptr2);
 	while (arg_token_op != NULL && arg_count_op < MAX_COMMAND_ARGS - 1) {
-		/*if ((strcmp(current_operator, "&&") == 0 && *last_exit_status != 0) ||
-		  (strcmp(current_operator, "||") == 0 && *last_exit_status == 0)) {
-		  free(before_operator);
-		  for (i = 0; i < arg_count_op; i++) {
-		  free(command_args_op[i]);
-		  command_args_op[i] = NULL;
-		  }
-		  return;*/ /*If logical condition met, exit the loop*/
-		/*} else {*/
 		printf("arg_token_op in the else block: %s\n", arg_token_op);
 		command_args_op[arg_count_op] = strdup(arg_token_op);
 		printf("Contents of the command_args_op array before calling strtok_r:\n");
@@ -300,7 +299,6 @@ void tokenize_and_process_before_operator(char *before_operator, int *last_exit_
 		}
 		arg_token_op = strtok_r(NULL, " \t", &saveptr2);
 		arg_count_op++;
-		/*}*/
 	}
 	command_args_op[arg_count_op] = NULL;
 
@@ -320,12 +318,6 @@ void tokenize_and_process_before_operator(char *before_operator, int *last_exit_
 	arg_count_op = 0;
 }
 void tokenize_and_process_after_operator(char *after_operator, char *opera, int *last_exit_status, int *total_operators) {
-	/*char *arg_token_op_aft;
-	  char *saveptr2;
-	  char *command_args_op_aft[MAX_COMMAND_ARGS];
-	  int arg_count_op_aft = 0;
-	  int i;*/
-	/*int executed_commands_count = 0;*/
 	int op_index = 0;
 	OperatorInfo *operators = NULL;
 	OperatorInfo current_operator = {0};
@@ -356,81 +348,18 @@ void tokenize_and_process_after_operator(char *after_operator, char *opera, int 
 	printf("current_operator.operator(after trimming after_operator): %s\n", current_operator.operator);
 	printf("sum_operators(after trimming after_operator): %d\n", sum_operators);
 	printf("total_operators(after trimming after_operator): %d\n", *total_operators);
-	/*if (sum_operators == 0)
-	  {
-	  printf("after_operator(last_command): %s\n", after_operator);
-	  printf("opera(last_command): %s\n", opera);
-	  tokenize_and_process_last_command(after_operator, &(*last_exit_status), opera);
-	  free(after_operator);
-	  after_operator = NULL;
-	  }*/
 	if (sum_operators != 0)
 	{
 		if ((strcmp(opera, "&&") == 0 && *last_exit_status != 0) ||
 				(strcmp(opera, "||") == 0 && *last_exit_status == 0)) {
 			free(after_operator);
-			/*for (i = 0; i < arg_count_op_aft; i++) {
-				free(command_args_op_aft[i]);
-				command_args_op_aft[i] = NULL;
-			}*/
 			return; /*If logical condition met, exit the loop*/
 		}
 		process_operator_occurrences(&executed_commands_count, op_index, &(*total_operators), operators, &(*last_exit_status), current_operator, after_operator, operator_position);
 	}
 	printf("after_operator(after calling process_operator_occurences): %s\n", after_operator);
-				/*free(after_operator);
-				after_operator = NULL;*/
 	printf("after_operator(after executing last_command(after_operator)): %s\n", after_operator);
 	return;
-			/*command_args_op_aft[0] = NULL;
-			  printf("after_operator before tokenizing: %s\n", after_operator);
-			  arg_token_op_aft = strtok_r(after_operator, " \t", &saveptr2);
-			  printf("arg_token_op_aft after tokenizing after_operator: %s\n", arg_token_op_aft);
-			  printf("opera after tokenizing after_operator: %s\n", opera);*/
-
-			/*while (arg_token_op_aft != NULL && arg_count_op_aft < MAX_COMMAND_ARGS - 1) {
-			  if ((strcmp(opera, "&&") == 0 && *last_exit_status != 0) ||
-			  (strcmp(opera, "||") == 0 && *last_exit_status == 0)) {
-			  free(after_operator);
-			  for (i = 0; i < arg_count_op_aft; i++) {
-			  free(command_args_op_aft[i]);
-			  command_args_op_aft[i] = NULL;
-			  }
-			  return;*/ /*If logical condition met, exit the loop*/
-			/*} else {
-			  printf("arg_token_op_aft in the else block: %s\n", arg_token_op_aft);
-			  command_args_op_aft[arg_count_op_aft] = strdup(arg_token_op_aft);
-			  printf("Contents of the command_args_op_aft array before calling strtok_r:\n");
-			  for (i = 0; i < arg_count_op_aft; i++) {
-			  printf("command_args_op_aft[%d]: %s\n", i, command_args_op_aft[i]);
-			  }
-			  if (command_args_op_aft[arg_count_op_aft] == NULL) {
-			  perror("strdup");
-			  exit(EXIT_FAILURE);
-			  }
-			  arg_token_op_aft = strtok_r(NULL, " \t", &saveptr2);
-			  arg_count_op_aft++;*/
-			/*execute_single_command(command_args_op_aft[0], command_args_op_aft, last_exit_status, opera);*/
-			/*}*/
-			/*command_args_op_aft[arg_count_op_aft] = NULL;*/
-			/*arg_count_op_aft++;*/
-			/*command_args_op_aft[arg_count_op_aft] = NULL;
-			  }*/
-
-			/*command_args_op_aft[arg_count_op_aft] = NULL;*/
-
-			/*printf("Contents of the command_args_op_aft array before executing the command:\n");
-			  for (i = 0; i < arg_count_op_aft; i++) {
-			  printf("command_args_op_aft[%d]: %s\n", i, command_args_op_aft[i]);
-			  }
-			  printf("executed_commands_count before executing first command(for after_operator): %d\n", executed_commands_count);
-			  execute_single_command(command_args_op_aft[0], command_args_op_aft, last_exit_status, opera);
-			  executed_commands_count++;
-			  printf("executed_commands_count after executing first command(for after_operator): %d\n", executed_commands_count);
-			  for (i = 0; i < arg_count_op_aft; i++) {
-			  free(command_args_op_aft[i]);
-			  command_args_op_aft[i] = NULL;
-			  }*/
 }
 void tokenize_and_process_last_command(char *after_operator, int *last_exit_status, char *current_operator) {
 
