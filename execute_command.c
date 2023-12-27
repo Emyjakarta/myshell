@@ -7,16 +7,6 @@ int execute_command(char *cmd, char **args)
 	pid_t pid;
 	pid_t return_pid; 
 
-	/*if (strcmp(cmd, "&&") == 0)
-	  {
-	  if (*last_exit_status == 0) {
-	  execute_command(args[0], args, last_exit_status);
-	  }
-	  } else if (strcmp(cmd, "||") == 0) {
-	  if (*last_exit_status != 0) {
-	  execute_command(args[0], args, last_exit_status);
-	  }
-	  } else {*/
 	printf("Before access check. cmd: %s\n", cmd);
 	if (cmd != NULL && access(cmd, X_OK) == 0)
 	{
