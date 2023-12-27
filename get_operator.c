@@ -22,7 +22,8 @@ OperatorInfo *obtain_operators(char *str) {
 	operators[count].position = -1; /*Setting a special position to indicate the end of the array*/
 	operators[count].operator = NULL;
 
-
+	/*free(str);
+	str = NULL;*/
 	return operators;
 }
 

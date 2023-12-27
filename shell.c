@@ -10,7 +10,9 @@ int main(int argc, char **argv, char **envp)
 	while (1)
 	{
 		show_prompt();
-		read_input(input);
+		read_input(&input);
+		free(input);
+		input = NULL;
 	}
 	return (0);
 }
