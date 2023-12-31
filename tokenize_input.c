@@ -99,10 +99,10 @@ void tokenize_input(char *input, int *last_exit_status)
 	free(operators);
 	operators = NULL;
 	/*printf("operators[op_index].operator after free(tokenize_input ending): %s\n", operators[op_index].operator);*/
-	/*printf("command_copy after while loop before free(tokenize_input ending) : %s\n", command_copy);*/
-	/*free(command_copy);
+	printf("command_copy after while loop before free(tokenize_input ending) : %s\n", command_copy);
+	free(command_copy);
 	command_copy = NULL;
-	printf("command_copy after while loop(tokenize_input ending) after free: %s\n", command_copy);*/
+	printf("command_copy after while loop(tokenize_input ending) after free: %s\n", command_copy);
 }
 void process_commands_with_operators(OperatorInfo *operators, int *last_exit_status, char **command_copy, OperatorInfo *current_operator) {
 	int op_index = 0;
