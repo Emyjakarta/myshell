@@ -25,11 +25,17 @@ void read_input(char **input)
 			*comment_pos = '\0';
 		remove_quotes(*input);
 		tokenize_input(*input, &last_exit_status);
+		/*if (*input != NULL)
+		{
+			free(*input);
+			*input = NULL;
+		}*/
+	}
+	/*if (*input != NULL)
+	{
 		free(*input);
 		*input = NULL;
-	}
-	free(*input);
-	*input = NULL;
+	}*/
 	/*if (input)
 	{
 		free(input);
