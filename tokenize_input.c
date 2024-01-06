@@ -116,11 +116,11 @@ void tokenize_input(char *input, int *last_exit_status)
 	command_copy = NULL;
 	printf("command_copy after while loop(tokenize_input ending) after free: %s\n", command_copy);*/
 	/*printf("input after while loop before free(tokenize_input ending) : %s\n", input);*/
-	if (input != NULL)
+	/*if (input != NULL)
 	{
 		free(input);
 		input = NULL;
-	}
+	}*/
 	/*printf("input after while loop after free(tokenize_input ending) : %s\n", input);*/
 }
 void process_commands_with_operators(OperatorInfo *operators, int *last_exit_status, char **command_copy, OperatorInfo *current_operator) {

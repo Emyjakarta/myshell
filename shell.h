@@ -12,10 +12,12 @@
 #include <sys/wait.h>
 #include <stdarg.h>
 #include <stdbool.h>
+#include <errno.h>
 
 #define MAX_COMMAND_ARGS 500
 #define MAXIMUM_COMMAND_LENGTH 1000
 #define MAX_OPERATORS 100
+#define BUFFER_SIZE 1024
 
 extern char **environ;
 
@@ -39,7 +41,7 @@ void obtain_operators(char **str, OperatorInfo *operators, int size);
 /*OperatorInfo *obtain_operators(char **str);*/
 void show_prompt(void);
 char _putcharshell(const char *str);
-void read_input(char **input);
+int read_input(char **input);
 void remove_quotes(char *str);
 void execute_command_without_operator(char **command_copy, int *last_exit_status, char *cur_operator);
 void execute_single_command(char *command, char **arguments, int *last_exit_status, char *logical_operator);
@@ -64,4 +66,5 @@ void _safe_free(void **ptr);
 /*char *obtain_operator(char *str);*/
 void trim_spaces(char *str);
 
+int _exe_command_from_file(const char *_filename);
 #endif /*SHELL_H*/

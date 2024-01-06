@@ -1,0 +1,5 @@
+ls -la
+echo woman
+ls -l /tmp
+echo holiday
+ls -l /var
