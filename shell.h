@@ -45,8 +45,9 @@ int read_input(char **input);
 void remove_quotes(char *str);
 void execute_command_without_operator(char **command_copy, int *last_exit_status, OperatorInfo *current_operator);
 void execute_single_command(char *command, char **arguments, int *last_exit_status, char *logical_operator);
-int execute_command(char *cmd, char **args);
-char *build_path(const char *_command);
+int execute_command(char **cmd, char **args);
+/*char *build_path(const char *_command);*/
+void build_path(const char *_command, char *_result, size_t result_size);
 int relative_path(char *cmd, char **args);
 void tokenize_input(char *input, int *last_exit_status);
 void tokenize_and_process_before_operator(char *before_operator, int *last_exit_status, char *current_operator);

@@ -5,15 +5,24 @@
  * @_command: command
  * Return: The built path to the executable
  */
-char *build_path(const char *_command)
+void build_path(const char *_command, char *_result, size_t result_size)
 {
 	char *_path = getenv("PATH");
-	char *_copy_path = strdup(_path);
-	char *dir = strtok(_copy_path, ":");
+	/*char _path[PATH_MAX];*/
+	char _copy_path[PATH_MAX];
+	char *dir = NULL;
 	char _full_path[PATH_MAX];
 	char *_build_path = NULL;
 	size_t _dir_len, _command_len;
 
+	if (_path == NULL)
+	{
+		fprintf(stderr, "Error: Unable to fetch path\n");
+		_result[0] = '\0';
+		return;
+	}
+	strncpy(_copy_path, _path, PATH_MAX);
+	dir = strtok(_copy_path, ":");
 	while (dir != NULL)
 	{
 		_dir_len = strlen(dir);
@@ -29,19 +38,16 @@ char *build_path(const char *_command)
 		printf("_full_path before access: %s\n", _full_path);
 		if (access(_full_path, X_OK) == 0)
 		{
-			_build_path = strdup(_full_path);
-			printf("_build_path after strdup: %s\n", _build_path);
-			break;
+			strncpy(_result, _full_path, result_size - 1); /* Copy result to buffer */
+			_result[result_size - 1] = '\0'; /* Ensure null termination */
+			/*_build_path = _full_path;*/
+			printf("_build_path: %s\n", _build_path);
+			/*break;*/
+			return;
 		}
-		/*else
-		{
-			fprintf(stderr, "%s: not found\n", _command);*/
-			/*printf("arguments[0]: %s\n", arguments[0]);*/
-			/*last_exit_status = 5;
-			return (last_exit_status);
-		}*/
 		dir = strtok(NULL, ":");
 	}
-	free(_copy_path);
-	return (_build_path);
+	_result[0] = '\0'; /* Empty string signifies failure */
+	/*free(_copy_path);*/
+	/*return (_build_path);*/
 }

@@ -1,14 +1,14 @@
 #include "shell.h"
 
-int execute_command(char *cmd, char **args)
+int execute_command(char **cmd, char **args)
 {
 	int last_exit_status, signal_number;
 	int status = 0, execve_status = 0;
 	pid_t pid;
 	pid_t return_pid; 
 
-	printf("Before access check. cmd: %s\n", cmd);
-	if (cmd != NULL && access(cmd, X_OK) == 0)
+	printf("Before access check. cmd: %s\n", *cmd);
+	if (cmd != NULL && access(*cmd, X_OK) == 0)
 	{
 		pid = fork();
 		printf("After fork call. pid: %d\n", pid);
@@ -19,8 +19,8 @@ int execute_command(char *cmd, char **args)
 		}
 		else if (pid == 0)
 		{
-			printf("Executing just before calling execve: %s\n", cmd);
-			execve_status = execve(cmd, args, environ);
+			printf("Executing just before calling execve: %s\n", *cmd);
+			execve_status = execve(*cmd, args, environ);
 			if (execve_status == -1)
 			{
 				printf("execve_status: %d\n", execve_status);

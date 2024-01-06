@@ -563,6 +563,9 @@ void execute_command_without_operator(char **command_copy, int *last_exit_status
 void execute_single_command(char *command, char **arguments, int *last_exit_status, char *logical_operator)
 {
 	int b_result = 0, i = 0;
+	char command_buffer[PATH_MAX];
+	command_buffer[0] = '\0'; /* Initialize buffer */
+
 	printf("Just entering the execute_single_command function\n");
 	printf("Before execution, last_exit_status = %d\n", *last_exit_status);
 	printf("command after entering execute_single_command: %s\n", command);
@@ -576,19 +579,21 @@ void execute_single_command(char *command, char **arguments, int *last_exit_stat
 	if (b_result == 1) {
 		if (command != NULL && *arguments[0] != '/') {
 			printf("command before calling build_path: %s\n", command);
-			command = build_path(command);
-			if (command == NULL)
+			/*command = build_path(command);*/
+			build_path(command, command_buffer, PATH_MAX);
+			if (command_buffer[0] == '\0')
 			{
 				fprintf(stderr, "%s: not found\n", command);
 				printf("arguments[0]: %s\n", arguments[0]);
 				*last_exit_status = 5;
-				free(command);
-				command = NULL;
+				/*free(command);
+				command = NULL;*/
 				return;
 			}
-			printf("command after calling build_path: %s\n", command);
+			printf("command after calling build_path: %s\n", command_buffer);
+			command = command_buffer; /* Update command to point to the result */
 		}
-		*last_exit_status = execute_command(command, arguments);
+		*last_exit_status = execute_command(&command, arguments);
 		/*free(command);
 		command = NULL;*/
 		/*for (i = 0; arguments[i] != NULL; i++)
