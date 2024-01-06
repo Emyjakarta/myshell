@@ -51,6 +51,18 @@ int main(int argc, char **argv, char **envp)
 				}
 				return (exit_handler(NULL, NULL));
 			}
+			else
+			{
+				 if (feof(stdin))
+				 {
+					if (input != NULL)
+					{
+						free(input);
+						input = NULL;
+					}
+					return (exit_handler(NULL, NULL));
+				 }
+			}
 		}
 		printf("input after getline: %s\n", input);
 		(input)[strcspn(input, "\n")] = '\0';
