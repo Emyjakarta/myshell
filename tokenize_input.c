@@ -23,7 +23,7 @@ void tokenize_input(char *input, int *last_exit_status)
 	/*OperatorInfo *operators = NULL;*/
 	OperatorInfo operators[MAX_OPERATORS] = {0};
 	int op_index = 0;
-	char *cur_operator = NULL;
+	/*char *cur_operator = NULL;*/
 	/*char *copy_input = NULL;*/
 	OperatorInfo current_operator = {0};
 
@@ -56,7 +56,7 @@ void tokenize_input(char *input, int *last_exit_status)
 	{
 		if (current_operator.operator == NULL || current_operator.operator[0] == '\0')
 		{
-			execute_command_without_operator(&command_copy, &(*last_exit_status), cur_operator);
+			execute_command_without_operator(&command_copy, &(*last_exit_status), current_operator.operator);
 			printf("command_copy (if block) for cmd without opera(after executing first command in tokenize_input): %s\n", command_copy);
 			/*free(command_copy);
 			command_copy = NULL;
@@ -552,7 +552,7 @@ void execute_command_without_operator(char **command_copy, int *last_exit_status
 		/*printf("command_args[%d] after executing (before free) for without operator: %s\n", i, command_args[i]);*/
 		/*free(command_args[i]);
 		command_args[i] = NULL;*/
-		/*printf("command_args[%d] after executing for without operator: %s\n", i, command_args[i]);*/
+		printf("command_args[%d] after executing for without operator: %s\n", i, command_args[i]);
 	}
 	printf("command_copy(before free) after executing(before returning) for without operator: %s\n", *command_copy);
 	/*printf("arg after freeing command_args: %s\n", arg);*/
