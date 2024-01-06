@@ -552,7 +552,7 @@ void execute_command_without_operator(char **command_copy, int *last_exit_status
 		/*printf("command_args[%d] after executing (before free) for without operator: %s\n", i, command_args[i]);*/
 		/*free(command_args[i]);
 		command_args[i] = NULL;*/
-		printf("command_args[%d] after executing for without operator: %s\n", i, command_args[i]);
+		/*printf("command_args[%d] after executing for without operator: %s\n", i, command_args[i]);*/
 	}
 	printf("command_copy(before free) after executing(before returning) for without operator: %s\n", *command_copy);
 	/*printf("arg after freeing command_args: %s\n", arg);*/
