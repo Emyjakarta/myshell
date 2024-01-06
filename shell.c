@@ -23,8 +23,20 @@ int main(int argc, char **argv, char **envp)
 			if (errno == ENOMEM)
 			{
 				fprintf(stderr, "malloc failed\n");
-				free(input);
-				input = NULL;
+				if (input != NULL)
+				{
+					free(input);
+					input = NULL;
+				}
+				return (exit_handler(NULL, NULL));
+			}
+			else
+			{
+				if (input != NULL)
+				{
+					free(input);
+					input = NULL;
+				}
 				return (exit_handler(NULL, NULL));
 			}
 		}
@@ -32,8 +44,11 @@ int main(int argc, char **argv, char **envp)
 		{
 			if (isatty(STDIN_FILENO))
 			{
-				free(input);
-				input = NULL;
+				if (input != NULL)
+				{
+					free(input);
+					input = NULL;
+				}
 				return (exit_handler(NULL, NULL));
 			}
 		}

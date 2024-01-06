@@ -34,9 +34,10 @@ int builtin_handler(char *command, char **arguments)
 }
 int exit_handler(char *command, char **arguments)
 {
-	(void) command;
 	(void) arguments;
 
+	free(command);
+	command = NULL;
 	exit(EXIT_SUCCESS);
 }
 int cd_handler(char *command, char **arguments) {
