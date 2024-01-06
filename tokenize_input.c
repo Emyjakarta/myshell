@@ -56,7 +56,7 @@ void tokenize_input(char *input, int *last_exit_status)
 	{
 		if (current_operator.operator == NULL || current_operator.operator[0] == '\0')
 		{
-			execute_command_without_operator(&command_copy, &(*last_exit_status), current_operator.operator);
+			execute_command_without_operator(&command_copy, &(*last_exit_status), &current_operator);
 			printf("command_copy (if block) for cmd without opera(after executing first command in tokenize_input): %s\n", command_copy);
 			/*free(command_copy);
 			command_copy = NULL;
@@ -514,7 +514,7 @@ void tokenize_and_process_last_command(char *after_operator, int *last_exit_stat
 	printf("after_operator after executing last_command(tokenize_and_process_last_command): %s\n", after_operator);
 	return;
 }
-void execute_command_without_operator(char **command_copy, int *last_exit_status, char *cur_operator)
+void execute_command_without_operator(char **command_copy, int *last_exit_status, OperatorInfo *current_operator)
 {
 	char /*before_operator,*/ *arg_token, *command_args[MAX_COMMAND_ARGS];
 	char *saveptr1 = NULL; /*saveptr2 = NULL,*/ /*arg*/
@@ -545,7 +545,7 @@ void execute_command_without_operator(char **command_copy, int *last_exit_status
 	{
 		printf("command_args[%d] for execute_command_without_operator: %s\n", i, command_args[i]);
 	}
-	execute_single_command(command_args[0], command_args, &(*last_exit_status), cur_operator);
+	execute_single_command(command_args[0], command_args, &(*last_exit_status), current_operator->operator);
 	for (i = 0; i < arg_count; i++)
 	{
 		/*printf("arg before freeing command_args: %s\n", arg);*/
@@ -589,8 +589,8 @@ void execute_single_command(char *command, char **arguments, int *last_exit_stat
 			printf("command after calling build_path: %s\n", command);
 		}
 		*last_exit_status = execute_command(command, arguments);
-		free(command);
-		command = NULL;
+		/*free(command);
+		command = NULL;*/
 		/*for (i = 0; arguments[i] != NULL; i++)
 		{
 			printf("arguments[%d] after executing (execute_single_command) before free: %s\n", i, arguments[i]);
