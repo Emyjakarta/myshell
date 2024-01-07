@@ -18,7 +18,7 @@ int builtin_handler(char *command, char **arguments)
 		 */
 		{NULL, NULL}
 	};
-	(void) command;
+	/*(void) command;*/
 	for (i = 0; builtin[i].command != NULL; i++)
 	{
 		if (command != NULL && strcmp(command, builtin[i].command) == 0)

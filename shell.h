@@ -17,6 +17,7 @@
 #define MAX_COMMAND_ARGS 500
 #define MAXIMUM_COMMAND_LENGTH 1000
 #define MAX_OPERATORS 100
+#define MAX_PATH_LENGTH 1024
 #define BUFFER_SIZE 1024
 
 extern char **environ;
