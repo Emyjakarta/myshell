@@ -51,13 +51,14 @@ void build_path(const char *_command, char *_result, size_t result_size);
 int relative_path(char *cmd, char **args);
 void tokenize_input(char *input, int *last_exit_status);
 void tokenize_and_process_before_operator(char *before_operator, int *last_exit_status, char *current_operator);
-void tokenize_and_process_after_operator(char **after_operator, char *opera, int *last_exit_status, int *total_operators);
+void tokenize_and_process_after_operator(char **after_operator, int *last_exit_status, int *total_operators);
 void tokenize_and_process_last_command(char *after_operator, int *last_exit_status, char *current_operator);
 void tokenize_and_process_after_operator2(int *last_exit_status, char **command_copy, OperatorInfo current_operator, char *after_operator);
 void update_indices_pointers(int *operator_index, int *op_index, OperatorInfo *current_operator, OperatorInfo *operators, char **current_command, char **ops_position);
 char *extract_before_operator(char **current_command, int operator_index);
 char *extract_after_operator(char **current_command, int operator_index, char *operator_position, char *current_operator);
-void process_operator_occurrences(int *executed_commands_count, int op_index, int *total_operators, OperatorInfo *operators, int *last_exit_status, OperatorInfo current_operator, char *original_command_copy, char *operator_position);
+void process_operator_occurrences(int *total_operators, int *last_exit_status,
+		OperatorInfo current_operator, char *original_command_copy, char *operator_position);
 char *find_operator_position(char *original_command_copy, char *current_operator);
 char *duplicate_command(char *command);
 void process_commands_with_operators(OperatorInfo *operators, int *last_exit_status, char **command_copy, OperatorInfo *current_operator);
