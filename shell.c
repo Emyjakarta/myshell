@@ -64,7 +64,6 @@ int main(int argc, char **argv, char **envp)
 				 }
 			}
 		}
-		printf("input after getline: %s\n", input);
 		(input)[strcspn(input, "\n")] = '\0';
 		comment_pos = strchr(input, '#');
 		if (comment_pos != NULL)

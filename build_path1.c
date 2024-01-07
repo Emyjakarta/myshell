@@ -11,7 +11,6 @@ void build_path(const char *_command, char *_result, size_t result_size)
 	char _copy_path[PATH_MAX];
 	char *dir = NULL;
 	char _full_path[PATH_MAX];
-	char *_build_path = NULL;
 	size_t _dir_len, _command_len;
 
 	if (_path == NULL)
@@ -34,12 +33,10 @@ void build_path(const char *_command, char *_result, size_t result_size)
 		strcpy(_full_path, dir);
 		_full_path[_dir_len] = '/';
 		strcpy(_full_path + _dir_len + 1, _command);
-		printf("_full_path before access: %s\n", _full_path);
 		if (access(_full_path, X_OK) == 0)
 		{
 			strncpy(_result, _full_path, result_size - 1); /* Copy result to buffer */
 			_result[result_size - 1] = '\0'; /* Ensure null termination */
-			printf("_build_path: %s\n", _build_path);
 			return;
 		}
 		dir = strtok(NULL, ":");

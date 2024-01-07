@@ -15,10 +15,8 @@ int builtin_handler(char *command, char **arguments)
 	(void) command;
 	for (i = 0; builtin[i].command != NULL; i++)
 	{
-		printf("Comparing command: %s with built-in: %s\n", command, builtin[i].command);
 		if (command != NULL && strcmp(command, builtin[i].command) == 0)
 		{
-			printf("Match found, calling handler for: %s\n", builtin[i].command);
 			result = builtin[i].handler(command, arguments);
 			if (result == 1)
 			{
@@ -28,7 +26,6 @@ int builtin_handler(char *command, char **arguments)
 			return (0);
 		}
 	}
-	printf("Command not found: %s\n", command);
 	return (1);
 }
 int exit_handler(char *command, char **arguments)
