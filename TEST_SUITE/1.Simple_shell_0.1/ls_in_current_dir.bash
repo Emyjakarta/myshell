@@ -84,7 +84,24 @@ function check_callback()
 {
 	status=$1
 
-	$RM -f "$PWD/hbtn_ls"
+#	$RM -f "$PWD/hbtn_ls"
 
 	return $status
 }
+#function check_callback() {
+#	status=$1
+
+	# Check if hbtn_ls file exists
+#	if [ -f "$PWD/hbtn_ls" ]; then
+#		echo "hbtn_ls file exists"
+
+		# Display content of hbtn_ls
+#		cat "$PWD/hbtn_ls"
+#	else
+#		echo "hbtn_ls file does not exist"
+#	fi
+
+#	$RM -f "$PWD/hbtn_ls"
+
+#	return $status
+#}

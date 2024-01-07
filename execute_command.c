@@ -41,9 +41,10 @@ void execute_single_command(char *command, char **arguments,
 	b_result = builtin_handler(command, arguments);
 	if (b_result == 1)
 	{
-		if (command != NULL && *arguments[0] != '/')
+		if (command != NULL && *arguments[0] != '/' && access(command, F_OK) != 0)
 		{
 			build_path(command, command_buffer, PATH_MAX);
+			printf("command: %s\ncommand_buffer: %s\n", command, command_buffer);
 			if (command_buffer[0] == '\0')
 			{
 				fprintf(stderr, "%s: not found\n", command);
@@ -51,6 +52,7 @@ void execute_single_command(char *command, char **arguments,
 				return;
 			}
 			command = command_buffer; /* Update command to point to the result */
+			printf("After update\ncommand: %s\ncommand_buffer: %s\n", command, command_buffer);
 		}
 		*last_exit_status = execute_command(&command, arguments);
 	}
