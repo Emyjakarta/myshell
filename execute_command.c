@@ -52,7 +52,8 @@ void execute_single_command(char *command, char **arguments,
 				return;
 			}
 			command = command_buffer; /* Update command to point to the result */
-			printf("After update\ncommand: %s\ncommand_buffer: %s\n", command, command_buffer);
+			printf("After update:\n");
+			printf("command: %s\ncommand_buffer: %s\n", command, command_buffer);
 		}
 		*last_exit_status = execute_command(&command, arguments);
 	}

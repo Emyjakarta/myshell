@@ -35,7 +35,7 @@ void build_path(const char *_command, char *_result, size_t result_size)
 		strcpy(_full_path, dir);
 		_full_path[_dir_len] = '/';
 		strcpy(_full_path + _dir_len + 1, _command);
-		if (access(_full_path, X_OK) == 0) 
+		if (access(_full_path, X_OK) == 0)
 		{
 			strncpy(_result, _full_path, result_size - 1); /* Copy result to buffer */
 			_result[result_size - 1] = '\0'; /* Ensure null termination */
