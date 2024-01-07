@@ -23,7 +23,7 @@ void tokenize_input(char *input, int *last_exit_status)
 	command_copy = single_command;
 	if (command_copy == NULL)
 	{
-		perror("command_copy is not NULL-terminated\n");
+		/*perror("command_copy is not NULL-terminated\n");*/
 		return;
 	}
 	obtain_operators(&command_copy, operators, MAX_OPERATORS);

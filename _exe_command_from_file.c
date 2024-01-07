@@ -26,8 +26,6 @@ int _exe_command_from_file(const char *_filename)
 	}
 	while ((_read = getline(&_line, &_len, _file)) != -1)
 	{
-		printf("Read: %ld\n", _read);
-		printf("_line after getline: %s\n", _line);
 		_line[strcspn(_line, "\n")] = '\0';
 		comment_pos = strchr(_line, '#');
 		if (comment_pos != NULL)
