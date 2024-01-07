@@ -46,7 +46,7 @@ void tokenize_input(char *input, int *last_exit_status)
 		index++;
 		if (single_command != NULL)
 		{
-		  	command_copy = single_command;
+			command_copy = single_command;
 		}
 	}
 }
@@ -94,23 +94,23 @@ void process_operator_occurrences(int *executed_commands_count, int op_index, in
 	(void) op_index;
 	(void) operators;
 
-		operator_index = operator_position - original_command_copy;
-		before_operator = extract_before_operator(&original_command_copy, operator_index);
-		after_operator = extract_after_operator(&original_command_copy, operator_index, operator_position, current_operator.operator);
+	operator_index = operator_position - original_command_copy;
+	before_operator = extract_before_operator(&original_command_copy, operator_index);
+	after_operator = extract_after_operator(&original_command_copy, operator_index, operator_position, current_operator.operator);
 
-		tokenize_and_process_before_operator(before_operator, &(*last_exit_status), current_operator.operator);
-		free(before_operator);
-		before_operator = NULL;
-		tokenize_and_process_after_operator(&after_operator, current_operator.operator, &(*last_exit_status), &(*total_operators));
-		if ((strcmp(current_operator.operator, "&&") == 0 && *last_exit_status != 0) ||
-				(strcmp(current_operator.operator, "||") == 0 && *last_exit_status == 0)) {
-			if (after_operator != NULL) {
-				free(after_operator);
-			        after_operator = NULL;
-			}
-			return;
+	tokenize_and_process_before_operator(before_operator, &(*last_exit_status), current_operator.operator);
+	free(before_operator);
+	before_operator = NULL;
+	tokenize_and_process_after_operator(&after_operator, current_operator.operator, &(*last_exit_status), &(*total_operators));
+	if ((strcmp(current_operator.operator, "&&") == 0 && *last_exit_status != 0) ||
+			(strcmp(current_operator.operator, "||") == 0 && *last_exit_status == 0)) {
+		if (after_operator != NULL) {
+			free(after_operator);
+			after_operator = NULL;
 		}
-		tokenize_and_process_last_command(after_operator, &(*last_exit_status), current_operator.operator);
+		return;
+	}
+	tokenize_and_process_last_command(after_operator, &(*last_exit_status), current_operator.operator);
 }
 char *extract_before_operator(char **current_command, int operator_index) {
 	char *before_operator = (char *)malloc((operator_index + 1) * sizeof(char));
