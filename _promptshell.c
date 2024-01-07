@@ -1,6 +1,6 @@
 #include "shell.h"
 /**
- * _show_prompt-print prompt to standard output
+ * show_prompt-print prompt to standard output
  * Return:void
  */
 void show_prompt(void)

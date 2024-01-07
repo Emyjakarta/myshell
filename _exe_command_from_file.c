@@ -6,12 +6,11 @@
  */
 int _exe_command_from_file(const char *_filename)
 {
-	char *_line = NULL;
+	char *_line = NULL, *comment_pos = NULL;
 	size_t _len = BUFFER_SIZE;
 	ssize_t _read;
 	FILE *_file = fopen(_filename, "r");
 	int last_exit_status = 0;
-	char *comment_pos = NULL;
 
 	if (_file == NULL)
 	{

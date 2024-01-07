@@ -1,10 +1,15 @@
 #include "shell.h"
-
+/**
+ * main-accepts command line arguments
+ * @argc: number of arguments
+ * @argv: argument vector
+ * @envp: environment variable
+ * Return: 0
+ */
 int main(int argc, char **argv, char **envp)
 {
-	char *input = NULL;
+	char *input = NULL, *comment_pos = NULL;
 	int last_exit_status = 0;
-	char *comment_pos = NULL;
 	size_t buffer = 0;
 	ssize_t read = 0;
 	(void)envp;
@@ -20,48 +25,17 @@ int main(int argc, char **argv, char **envp)
 		read = getline(&input, &buffer, stdin);
 		if (read == -1)
 		{
-			if (errno == ENOMEM)
-			{
-				fprintf(stderr, "malloc failed\n");
-				if (input != NULL)
-				{
-					free(input);
-					input = NULL;
-				}
-				return (exit_handler(NULL, NULL));
-			}
-			else
-			{
-				if (input != NULL)
-				{
-					free(input);
-					input = NULL;
-				}
-				return (exit_handler(NULL, NULL));
-			}
+			if (input != NULL)
+				free(input), input = NULL;
+			return (exit_handler(NULL, NULL));
 		}
 		else if (read == 0)
 		{
 			if (isatty(STDIN_FILENO))
 			{
 				if (input != NULL)
-				{
-					free(input);
-					input = NULL;
-				}
+					free(input), input = NULL;
 				return (exit_handler(NULL, NULL));
-			}
-			else
-			{
-				 if (feof(stdin))
-				 {
-					if (input != NULL)
-					{
-						free(input);
-						input = NULL;
-					}
-					return (exit_handler(NULL, NULL));
-				 }
 			}
 		}
 		(input)[strcspn(input, "\n")] = '\0';
@@ -72,9 +46,6 @@ int main(int argc, char **argv, char **envp)
 		tokenize_input(input, &last_exit_status);
 	}
 	if (input != NULL)
-	{
-		free(input);
-		input = NULL;
-	}
+		free(input), input = NULL;
 	return (0);
 }

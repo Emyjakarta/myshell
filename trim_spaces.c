@@ -1,6 +1,9 @@
 #include "shell.h"
-
-void trim_spaces(char *str) 
+/**
+ * trim_spaces-trim spaces
+ * @str: string
+ */
+void trim_spaces(char *str)
 {
 	int start = 0, end = strlen(str) - 1;
 	int i = 0;
@@ -10,7 +13,8 @@ void trim_spaces(char *str)
 		start++;
 
 	/* Trim trailing spaces*/
-	while (end >= start && (str[end] == ' ' || str[end] == '\t' || str[end] == '\n'))
+	while (end >= start && (str[end] == ' '
+				|| str[end] == '\t' || str[end] == '\n'))
 		end--;
 
 	/*Shift characters to remove leading spaces*/

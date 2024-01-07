@@ -3,6 +3,8 @@
 /**
  * build_path-build path for ordinary commands like ls
  * @_command: command
+ * @_result: used to build the path
+ * @result_size: size of the buffer
  * Return: The built path to the executable
  */
 void build_path(const char *_command, char *_result, size_t result_size)

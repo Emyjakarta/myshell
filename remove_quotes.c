@@ -1,5 +1,8 @@
 #include "shell.h"
-
+/**
+ * remove_quotes-remove quotes
+ * @str: string
+ */
 void remove_quotes(char *str)
 {
 	char *src = str;

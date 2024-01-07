@@ -1,5 +1,9 @@
 #include "shell.h"
-
+/**
+ * read_input-read input
+ * @input: input
+ * Return: 0
+ */
 int read_input(char **input)
 {
 	ssize_t read = 0;
