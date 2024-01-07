@@ -31,7 +31,7 @@ int _exe_command_from_file(const char *_filename)
 		_line[strcspn(_line, "\n")] = '\0';
 		comment_pos = strchr(_line, '#');
 		if (comment_pos != NULL)
-			comment_pos = '\0';
+			*comment_pos = '\0';
 		remove_quotes(_line);
 		tokenize_input(_line, &last_exit_status);
 	}
