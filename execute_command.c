@@ -1,8 +1,48 @@
 #include "shell.h"
 
+void execute_command_without_operator(char **command_copy, int *last_exit_status, OperatorInfo *current_operator)
+{
+	char *arg_token, *command_args[MAX_COMMAND_ARGS];
+	char *saveptr1 = NULL;
+	int arg_count;
+
+	arg_count = 0;
+	arg_token = strtok_r(*command_copy, " \t", &saveptr1);
+	while (arg_token != NULL && arg_count < MAX_COMMAND_ARGS - 1)
+	{
+		command_args[arg_count++] = arg_token;
+		arg_token = strtok_r(NULL, " \t", &saveptr1);
+	}
+	command_args[arg_count] = NULL;
+	execute_single_command(command_args[0], command_args, &(*last_exit_status), current_operator->operator);
+}
+
+void execute_single_command(char *command, char **arguments, int *last_exit_status, char *logical_operator)
+{
+	int b_result = 0;
+	char command_buffer[PATH_MAX];
+	(void) logical_operator;
+
+	command_buffer[0] = '\0'; /* Initialize buffer */
+	b_result = builtin_handler(command, arguments);
+	if (b_result == 1) {
+		if (command != NULL && *arguments[0] != '/') {
+			build_path(command, command_buffer, PATH_MAX);
+			if (command_buffer[0] == '\0')
+			{
+				fprintf(stderr, "%s: not found\n", command);
+				*last_exit_status = 5;
+				return;
+			}
+			command = command_buffer; /* Update command to point to the result */
+		}
+		*last_exit_status = execute_command(&command, arguments);
+	}
+}
+
 int execute_command(char **cmd, char **args)
 {
-	int last_exit_status; /*signal_number;*/
+	int last_exit_status;
 	int status = 0, execve_status = 0;
 	pid_t pid;
 	pid_t return_pid; 
@@ -35,10 +75,6 @@ int execute_command(char **cmd, char **args)
 			{	
 				last_exit_status = WEXITSTATUS(status);
 			}
-			/*else
-			{
-				signal_number = WTERMSIG(status);
-			}*/
 		}
 	}
 	return (last_exit_status);
