@@ -76,21 +76,13 @@ int handle_cd(char *_new_dir, char *_current_dir)
 {
 	int result = 0;
 
-	print_directories_info(_new_dir, _current_dir);
-
 	/* Validate and change directory */
 	if (change_directory(_new_dir) != 0)
 		result = -1;
 
-	printf("After chdir: _new_dir: %s, _current_dir: %s, PWD: %s, OLDPWD: %s\n",
-			_new_dir, _current_dir, getenv("PWD"), getenv("OLDPWD"));
-
 	/* Update environment variables */
 	if (update_environment_variables(_current_dir) != 0)
 		result = -1;
-
-	printf("After getcwd: _new_dir: %s, _current_dir: %s, PWD: %s, OLDPWD: %s\n",
-			_new_dir, _current_dir, getenv("PWD"), getenv("OLDPWD"));
 
 	return (result);
 }

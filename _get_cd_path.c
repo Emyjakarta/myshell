@@ -15,9 +15,7 @@ char *_get_cd_path(const char *_command, char **arguments)
 		return (NULL);
 	if (arguments[1] == NULL)
 		return (getenv("HOME"));
-	printf("arguments[1]: %s\n", arguments[1]);
 	_oldpwd = getenv("OLDPWD");
-	printf("OLDPWD: %s\n", _oldpwd);
 	if (_oldpwd == NULL)
 	{
 		printf("OLDPWD not set\n");
@@ -42,7 +40,6 @@ char *_get_cd_path(const char *_command, char **arguments)
 	}
 	else
 	{
-		printf("Invalid directory or insufficient permissions\n");
 		return (NULL);
 	}
 }
