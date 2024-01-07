@@ -16,7 +16,7 @@ int main(int argc, char **argv, char **envp)
 
 	if (argc >= 2)
 	{
-		last_exit_status = _exe_command_from_file(argv[1]);
+		last_exit_status = _exe_command_from_file(argv);
 		return (last_exit_status);
 	}
 	while (1)
@@ -43,7 +43,7 @@ int main(int argc, char **argv, char **envp)
 		if (comment_pos != NULL)
 			*comment_pos = '\0';
 		remove_quotes(input);
-		tokenize_input(input, &last_exit_status);
+		tokenize_input(argv, input, &last_exit_status);
 	}
 	if (input != NULL)
 		free(input), input = NULL;

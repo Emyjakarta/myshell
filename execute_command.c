@@ -5,7 +5,7 @@
  * @last_exit_status: last exit status
  * @current_operator: current operator
  */
-void execute_command_without_operator(char **command_copy,
+void execute_command_without_operator(const char *file_name, char **command_copy,
 		int *last_exit_status, OperatorInfo *current_operator)
 {
 	char *arg_token, *command_args[MAX_COMMAND_ARGS];
@@ -20,7 +20,7 @@ void execute_command_without_operator(char **command_copy,
 		arg_token = strtok_r(NULL, " \t", &saveptr1);
 	}
 	command_args[arg_count] = NULL;
-	execute_single_command(command_args[0], command_args,
+	execute_single_command(file_name, command_args[0], command_args,
 			&(*last_exit_status), current_operator->operator);
 }
 /**
@@ -30,10 +30,11 @@ void execute_command_without_operator(char **command_copy,
  * @last_exit_status: last exit status
  * @logical_operator: logical operator
  */
-void execute_single_command(char *command, char **arguments,
+void execute_single_command(const char *file_name, char *command, char **arguments,
 		int *last_exit_status, char *logical_operator)
 {
 	int b_result = 0;
+	static size_t err_count = 1;
 	char command_buffer[PATH_MAX];
 	(void) logical_operator;
 
@@ -44,16 +45,16 @@ void execute_single_command(char *command, char **arguments,
 		if (command != NULL && *arguments[0] != '/' && access(command, F_OK) != 0)
 		{
 			build_path(command, command_buffer, PATH_MAX);
-			printf("command: %s\ncommand_buffer: %s\n", command, command_buffer);
 			if (command_buffer[0] == '\0')
 			{
-				fprintf(stderr, "%s: not found\n", command);
-				*last_exit_status = 5;
+				dprintf(STDERR_FILENO, "%s: %lu: %s: not found\n", file_name, err_count,
+						                        arguments[0]);
+				/*fprintf(stderr, "%s: not found\n", command);*/
+				*last_exit_status = 127;
+				err_count++;
 				return;
 			}
 			command = command_buffer; /* Update command to point to the result */
-			printf("After update:\n");
-			printf("command: %s\ncommand_buffer: %s\n", command, command_buffer);
 		}
 		*last_exit_status = execute_command(&command, arguments);
 	}

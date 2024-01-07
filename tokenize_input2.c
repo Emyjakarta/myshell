@@ -71,7 +71,7 @@ void cleanup(OperatorInfo *operators)
  * @last_exit_status: last exit status
  * @current_operator: current operator
  */
-void tokenize_and_process_last_command(char *after_operator,
+void tokenize_and_process_last_command(const char *file_name, char *after_operator,
 		int *last_exit_status, char *current_operator)
 {
 
@@ -103,7 +103,7 @@ void tokenize_and_process_last_command(char *after_operator,
 		arg_count_op++;
 	}
 	command_args_op[arg_count_op] = NULL;
-	execute_single_command(command_args_op[0],
+	execute_single_command(file_name, command_args_op[0],
 			command_args_op, last_exit_status, current_operator);
 
 	for (i = 0; i < arg_count_op; i++)

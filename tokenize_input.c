@@ -8,7 +8,7 @@ int total_operators;
  * @last_exit_status: last exit status. Initialized to 0
  * Return: void
  */
-void tokenize_input(char *input, int *last_exit_status)
+void tokenize_input(char **argv, char *input, int *last_exit_status)
 {
 	char *delim = ";\n";
 	char *single_command = NULL;
@@ -33,12 +33,12 @@ void tokenize_input(char *input, int *last_exit_status)
 		if (current_operator.operator == NULL ||
 				current_operator.operator[0] == '\0')
 		{
-			execute_command_without_operator(&command_copy,
+			execute_command_without_operator(argv[0], &command_copy,
 					&(*last_exit_status), &current_operator);
 		}
 		else if (current_operator.operator != NULL)
 		{
-			process_commands_with_operators(operators, &(*last_exit_status),
+			process_commands_with_operators(argv[0], operators, &(*last_exit_status),
 					&command_copy, &current_operator);
 		}
 		single_command = strtok_r(NULL, delim, &saveptr1);
@@ -56,7 +56,7 @@ void tokenize_input(char *input, int *last_exit_status)
  * @command_copy: copy of command
  * @current_operator: current operator
  */
-void process_commands_with_operators(OperatorInfo *operators,
+void process_commands_with_operators(const char *file_name, OperatorInfo *operators,
 		int *last_exit_status, char **command_copy, OperatorInfo *current_operator)
 {
 	char *operator_position = NULL;
@@ -82,7 +82,7 @@ void process_commands_with_operators(OperatorInfo *operators,
 			}
 			else
 			{
-				process_operator_occurrences(&total_operators, &(*last_exit_status),
+				process_operator_occurrences(file_name, &total_operators, &(*last_exit_status),
 						*current_operator, (*command_copy), operator_position);
 			}
 			break;
@@ -97,7 +97,7 @@ void process_commands_with_operators(OperatorInfo *operators,
  * @original_command_copy: command copy
  * @operator_position: operator position
  */
-void process_operator_occurrences(int *total_operators, int *last_exit_status,
+void process_operator_occurrences(const char *file_name, int *total_operators, int *last_exit_status,
 		OperatorInfo current_operator, char *original_command_copy,
 		char *operator_position)
 {
@@ -110,11 +110,11 @@ void process_operator_occurrences(int *total_operators, int *last_exit_status,
 			operator_index);
 	after_operator = extract_after_operator(&original_command_copy,
 			operator_index, operator_position, current_operator.operator);
-	tokenize_and_process_before_operator(before_operator,
+	tokenize_and_process_before_operator(file_name, before_operator,
 			&(*last_exit_status), current_operator.operator);
 	free(before_operator);
 	before_operator = NULL;
-	tokenize_and_process_after_operator(&after_operator,
+	tokenize_and_process_after_operator(file_name, &after_operator,
 			&(*last_exit_status), &(*total_operators));
 	if ((strcmp(current_operator.operator, "&&") == 0
 				&& *last_exit_status != 0) ||
@@ -128,7 +128,7 @@ void process_operator_occurrences(int *total_operators, int *last_exit_status,
 		}
 		return;
 	}
-	tokenize_and_process_last_command(after_operator,
+	tokenize_and_process_last_command(file_name, after_operator,
 			&(*last_exit_status), current_operator.operator);
 }
 /**
@@ -137,7 +137,7 @@ void process_operator_occurrences(int *total_operators, int *last_exit_status,
  * @last_exit_status: last exit status
  * @current_operator: current operator
  */
-void tokenize_and_process_before_operator(char *before_operator,
+void tokenize_and_process_before_operator(const char *file_name, char *before_operator,
 		int *last_exit_status, char *current_operator)
 {
 
@@ -168,7 +168,7 @@ void tokenize_and_process_before_operator(char *before_operator,
 		arg_count_op++;
 	}
 	command_args_op[arg_count_op] = NULL;
-	execute_single_command(command_args_op[0], command_args_op,
+	execute_single_command(file_name, command_args_op[0], command_args_op,
 			last_exit_status, current_operator);
 	executed_commands_count++;
 
@@ -185,7 +185,7 @@ void tokenize_and_process_before_operator(char *before_operator,
  * @last_exit_status: last exit status
  * @total_operators: total operators
  */
-void tokenize_and_process_after_operator(char **after_operator,
+void tokenize_and_process_after_operator(const char *file_name, char **after_operator,
 		int *last_exit_status, int *total_operators)
 {
 	int op_index = 0;
@@ -220,7 +220,7 @@ void tokenize_and_process_after_operator(char **after_operator,
 			*after_operator = NULL;
 			exit_handler(NULL, NULL); /*If logical condition met, exit the loop*/
 		}
-		process_operator_occurrences(&(*total_operators),
+		process_operator_occurrences(file_name, &(*total_operators),
 				&(*last_exit_status), current_operator,
 				(*after_operator), operator_position);
 		free(*after_operator);

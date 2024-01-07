@@ -4,18 +4,25 @@
  * @_filename: name of file
  * Return: void
  */
-int _exe_command_from_file(const char *_filename)
+int _exe_command_from_file(char **argv)
 {
 	char *_line = NULL, *comment_pos = NULL;
 	size_t _len = BUFFER_SIZE;
 	ssize_t _read;
-	FILE *_file = fopen(_filename, "r");
+	FILE *_file = fopen(argv[1], "r");
 	int last_exit_status = 0;
 
 	if (_file == NULL)
 	{
-		perror("File opening failed");
-		exit(EXIT_FAILURE);
+		/*if (fd == -1)
+		{*/
+			/* we couldn't open the file, let's clean and leave */
+			/*free_list(&path_list);*/
+			dprintf(2, "%s: 0: Can't open %s\n", argv[0], argv[1]);
+			return (127);
+		/*}*/
+		/*perror("File opening failed");
+		  exit(EXIT_FAILURE);*/
 	}
 	_line = calloc(_len, sizeof(char));
 	if (_line == NULL)
@@ -31,7 +38,7 @@ int _exe_command_from_file(const char *_filename)
 		if (comment_pos != NULL)
 			*comment_pos = '\0';
 		remove_quotes(_line);
-		tokenize_input(_line, &last_exit_status);
+		tokenize_input(argv, _line, &last_exit_status);
 	}
 	if (_read == -1)
 	{

@@ -55,22 +55,22 @@ void obtain_operators(char **str, OperatorInfo *operators, int size);
 /*OperatorInfo *obtain_operators(char **str);*/
 void show_prompt(void);
 char _putcharshell(const char *str);
-int read_input(char **input);
+int read_input(char **argv, char **input);
 void remove_quotes(char *str);
-void execute_command_without_operator(char **command_copy,
+void execute_command_without_operator(const char *file_name, char **command_copy,
 		int *last_exit_status, OperatorInfo *current_operator);
-void execute_single_command(char *command, char **arguments,
+void execute_single_command(const char *file_name, char *command, char **arguments,
 		int *last_exit_status, char *logical_operator);
 int execute_command(char **cmd, char **args);
 /*char *build_path(const char *_command);*/
 void build_path(const char *_command, char *_result, size_t result_size);
 int relative_path(char *cmd, char **args);
-void tokenize_input(char *input, int *last_exit_status);
-void tokenize_and_process_before_operator(char *before_operator,
+void tokenize_input(char **argv, char *input, int *last_exit_status);
+void tokenize_and_process_before_operator(const char *file_name, char *before_operator,
 		int *last_exit_status, char *current_operator);
-void tokenize_and_process_after_operator(char **after_operator,
+void tokenize_and_process_after_operator(const char *file_name, char **after_operator,
 		int *last_exit_status, int *total_operators);
-void tokenize_and_process_last_command(char *after_operator,
+void tokenize_and_process_last_command(const char *file_name, char *after_operator,
 		int *last_exit_status, char *current_operator);
 void tokenize_and_process_after_operator2(int *last_exit_status,
 		char **command_copy, OperatorInfo current_operator, char *after_operator);
@@ -80,10 +80,10 @@ void update_indices_pointers(int *operator_index,
 char *extract_before_operator(char **current_command, int operator_index);
 char *extract_after_operator(char **current_command,
 		int operator_index, char *operator_position, char *current_operator);
-void process_operator_occurrences(int *total_operators, int *last_exit_status,
+void process_operator_occurrences(const char *file_name, int *total_operators, int *last_exit_status,
 		OperatorInfo current_operator, char *original_command_copy,
 		char *operator_position);
-void process_commands_with_operators(OperatorInfo *operators,
+void process_commands_with_operators(const char *file_name, OperatorInfo *operators,
 		int *last_exit_status, char **command_copy, OperatorInfo *current_operator);
 void cleanup(OperatorInfo *operators);
 int count_operators(OperatorInfo *operators);
@@ -91,5 +91,5 @@ void _safe_free(void **ptr);
 /*char *obtain_operator(char *str);*/
 void trim_spaces(char *str);
 
-int _exe_command_from_file(const char *_filename);
+int _exe_command_from_file(char **argv);
 #endif /*SHELL_H*/
