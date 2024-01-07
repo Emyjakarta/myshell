@@ -8,7 +8,6 @@
 void build_path(const char *_command, char *_result, size_t result_size)
 {
 	char *_path = getenv("PATH");
-	/*char _path[PATH_MAX];*/
 	char _copy_path[PATH_MAX];
 	char *dir = NULL;
 	char _full_path[PATH_MAX];
@@ -40,14 +39,10 @@ void build_path(const char *_command, char *_result, size_t result_size)
 		{
 			strncpy(_result, _full_path, result_size - 1); /* Copy result to buffer */
 			_result[result_size - 1] = '\0'; /* Ensure null termination */
-			/*_build_path = _full_path;*/
 			printf("_build_path: %s\n", _build_path);
-			/*break;*/
 			return;
 		}
 		dir = strtok(NULL, ":");
 	}
 	_result[0] = '\0'; /* Empty string signifies failure */
-	/*free(_copy_path);*/
-	/*return (_build_path);*/
 }

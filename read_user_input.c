@@ -13,9 +13,6 @@ int read_input(char **input)
 		if (errno == ENOMEM)
 		{
 			fprintf(stderr, "malloc failed\n");
-			/*perror("Error reading input or EOF");*/
-			/*free(*input);*/
-			/**input = NULL;*/
 			return (1);
 		}
 	}

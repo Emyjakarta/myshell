@@ -29,7 +29,6 @@ int builtin_handler(char *command, char **arguments)
 		}
 	}
 	printf("Command not found: %s\n", command);
-	/*}*/
 	return (1);
 }
 int exit_handler(char *command, char **arguments)
@@ -45,7 +44,6 @@ int cd_handler(char *command, char **arguments) {
 	char _current_dir[PATH_MAX], *_oldpwd, *_home_dir;
 	struct stat statbuf;
 	const char *ERR_MSG = "OLDPWD not set\n";
-	/*int new_dir_allocated = 0;*/
 
 	if (_new_dir == NULL) {
 		printf("Error: Could not get new directory\n");

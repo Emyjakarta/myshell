@@ -6,7 +6,7 @@
  */
 int _exe_command_from_file(const char *_filename)
 {
-	char *_line = NULL; /*_replaced_command;*/
+	char *_line = NULL;
 	size_t _len = BUFFER_SIZE;
 	ssize_t _read;
 	FILE *_file = fopen(_filename, "r");
@@ -35,14 +35,6 @@ int _exe_command_from_file(const char *_filename)
 			comment_pos = '\0';
 		remove_quotes(_line);
 		tokenize_input(_line, &last_exit_status);
-		/*if (_line[0] != '#' && _line[_read - 1] == '\n')
-		  {
-		  _line[_read - 1] = '\0';
-		  read_input(&_line);*/
-		/*_replaced_command = _replace_var(_line);*/
-		/*_execute_command(_line);
-		  free(_replaced_command);*/
-		/*}*/
 	}
 	if (_read == -1)
 	{
