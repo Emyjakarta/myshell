@@ -17,7 +17,7 @@ void build_path(const char *_command, char *_result, size_t result_size)
 
 	if (_path == NULL)
 	{
-		fprintf(stderr, "Error: Unable to fetch path\n");
+		/*fprintf(stderr, "Error: Unable to fetch path\n");*/
 		_result[0] = '\0';
 		return;
 	}

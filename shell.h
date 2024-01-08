@@ -59,7 +59,7 @@ int read_input(char **argv, char **input);
 void remove_quotes(char *str);
 void execute_command_without_operator(const char *file_name, char **command_copy,
 		int *last_exit_status, OperatorInfo *current_operator);
-void execute_single_command(const char *file_name, char *command, char **arguments,
+int execute_single_command(const char *file_name, char *command, char **arguments,
 		int *last_exit_status, char *logical_operator);
 int execute_command(char **cmd, char **args);
 /*char *build_path(const char *_command);*/

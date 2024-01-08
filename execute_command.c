@@ -20,7 +20,7 @@ void execute_command_without_operator(const char *file_name, char **command_copy
 		arg_token = strtok_r(NULL, " \t", &saveptr1);
 	}
 	command_args[arg_count] = NULL;
-	execute_single_command(file_name, command_args[0], command_args,
+	*last_exit_status = execute_single_command(file_name, command_args[0], command_args,
 			&(*last_exit_status), current_operator->operator);
 }
 /**
@@ -29,8 +29,9 @@ void execute_command_without_operator(const char *file_name, char **command_copy
  * @arguments: arguments
  * @last_exit_status: last exit status
  * @logical_operator: logical operator
+ * Return: last exit status or 0
  */
-void execute_single_command(const char *file_name, char *command, char **arguments,
+int execute_single_command(const char *file_name, char *command, char **arguments,
 		int *last_exit_status, char *logical_operator)
 {
 	int b_result = 0;
@@ -49,15 +50,26 @@ void execute_single_command(const char *file_name, char *command, char **argumen
 			{
 				dprintf(STDERR_FILENO, "%s: %lu: %s: not found\n", file_name, err_count,
 						                        arguments[0]);
-				/*fprintf(stderr, "%s: not found\n", command);*/
-				*last_exit_status = 127;
 				err_count++;
-				return;
+				/*last_exit_status = 127;
+				return (*last_exit_status);*/
+				exit(127);
 			}
 			command = command_buffer; /* Update command to point to the result */
 		}
+		else
+		{
+			if (command != NULL && *arguments[0] == '/' && access(command, F_OK) != 0)
+			{
+				dprintf(STDERR_FILENO, "%s: %lu: %s: not found\n", file_name, err_count,
+						arguments[0]);
+				err_count++;
+				exit(127);
+			}
+		}
 		*last_exit_status = execute_command(&command, arguments);
 	}
+	return (*last_exit_status);
 }
 /**
  * execute_command-execute command
