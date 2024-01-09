@@ -15,7 +15,7 @@
 #include <errno.h>
 
 #define MAX_COMMAND_ARGS 500
-#define MAXIMUM_COMMAND_LENGTH 1000
+#define MAXIMUM_COMMAND_LENGTH 1024
 #define MAX_OPERATORS 100
 #define MAX_PATH_LENGTH 1024
 #define BUFFER_SIZE 1024
@@ -85,6 +85,7 @@ int execute_command(char **cmd, char **args);
 /*char *build_path(const char *_command);*/
 void build_path(const char *_command, char *_result, size_t result_size);
 int relative_path(char *cmd, char **args);
+void replace_variables(char* command, char* modified_command, int *last_exit_status);
 void tokenize_input(char **argv, char *input, int *last_exit_status);
 void tokenize_and_process_before_operator(const char *file_name, char *before_operator,
 		int *last_exit_status, char *current_operator);

@@ -9,6 +9,7 @@
 int main(int argc, char **argv, char **envp)
 {
 	char *input = NULL, *comment_pos = NULL;
+	char modified_input[MAXIMUM_COMMAND_LENGTH] = {'\0'};
 	int last_exit_status = 0;
 	size_t buffer = 0;
 	ssize_t read = 0;
@@ -43,7 +44,8 @@ int main(int argc, char **argv, char **envp)
 		if (comment_pos != NULL)
 			*comment_pos = '\0';
 		remove_quotes(input);
-		tokenize_input(argv, input, &last_exit_status);
+		replace_variables(input, modified_input, &last_exit_status);
+		tokenize_input(argv, modified_input, &last_exit_status);
 	}
 	if (input != NULL)
 		free(input), input = NULL;

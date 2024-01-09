@@ -7,6 +7,7 @@
 int _exe_command_from_file(char **argv)
 {
 	char *_line = NULL, *comment_pos = NULL;
+	char modified_line[MAXIMUM_COMMAND_LENGTH];
 	size_t _len = BUFFER_SIZE;
 	ssize_t _read;
 	FILE *_file = fopen(argv[1], "r");
@@ -17,12 +18,9 @@ int _exe_command_from_file(char **argv)
 		/*if (fd == -1)
 		{*/
 			/* we couldn't open the file, let's clean and leave */
-			/*free_list(&path_list);*/
 			dprintf(2, "%s: 0: Can't open %s\n", argv[0], argv[1]);
 			return (127);
 		/*}*/
-		/*perror("File opening failed");
-		  exit(EXIT_FAILURE);*/
 	}
 	_line = calloc(_len, sizeof(char));
 	if (_line == NULL)
@@ -38,7 +36,8 @@ int _exe_command_from_file(char **argv)
 		if (comment_pos != NULL)
 			*comment_pos = '\0';
 		remove_quotes(_line);
-		tokenize_input(argv, _line, &last_exit_status);
+		replace_variables(_line, modified_line, &last_exit_status);
+		tokenize_input(argv, modified_line, &last_exit_status);
 	}
 	if (_read == -1)
 	{
