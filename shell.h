@@ -19,6 +19,8 @@
 #define MAX_OPERATORS 100
 #define MAX_PATH_LENGTH 1024
 #define BUFFER_SIZE 1024
+#define MAX_ALIASES 50
+#define MAX_ALIAS_LEN 100
 
 extern char **environ;
 
@@ -39,6 +41,24 @@ int cd_handler(char *command, char **arguments);
 int _is_cd(const char *_command);
 char *_get_cd_path(const char *_command, char **arguments);
 int pwd_handler(char *command, char **arguments);
+int setenv_handler(char *command, char **arguments);
+int unsetenv_handler(char *command, char **arguments);
+int alias_handler(char *command, char **arguments);
+void print_aliases(void);
+void print_alias(char *name);
+void define_alias(char *name, char *value);
+
+/**
+ * struct alias-struct for aliases
+ * @name: name of the alias
+ * @value: value of the alias
+ * Description: struct for aliases
+ */
+typedef struct alias
+{
+	char name[MAX_ALIAS_LEN];
+        char value[MAX_ALIAS_LEN];
+} alias;
 
 /**
  * struct OperatorInfo-struct for retrieving logical operators

@@ -12,13 +12,11 @@ int builtin_handler(char *command, char **arguments)
 		{"exit", exit_handler},
 		{"cd", cd_handler},
 		{"pwd", pwd_handler},
-		/**
-		 *	{"setenv", setenv_handler},
-		 *	{"unsetenv", unsetenv_handler},
-		 */
+		{"setenv", setenv_handler},
+		{"unsetenv", unsetenv_handler},
+		{"alias", alias_handler},
 		{NULL, NULL}
 	};
-	/*(void) command;*/
 	for (i = 0; builtin[i].command != NULL; i++)
 	{
 		if (command != NULL && strcmp(command, builtin[i].command) == 0)
@@ -71,3 +69,49 @@ int pwd_handler(char *command, char **arguments)
 		return (1);
 	}
 }
+/**
+ * setenv_handler - Handles the 'setenv' command to initialize or modify an environment variable
+ * @command: command string
+ * @arguments: array of arguments
+ * Return: 0 on success, -1 on failure
+ */
+int setenv_handler(char *command, char **arguments)
+{
+	(void) command;
+
+	if (arguments[1] == NULL || arguments[2] == NULL) {
+		fprintf(stderr, "Usage: setenv VARIABLE VALUE\n");
+		return -1;
+	}
+
+	if (setenv(arguments[1], arguments[2], 1) == -1) {
+		perror("setenv");
+		return -1;
+	}
+
+	return 0;
+}
+
+/**
+ * unsetenv_handler - Handles the 'unsetenv' command to remove an environment variable
+ * @command: command string
+ * @arguments: array of arguments
+ * Return: 0 on success, -1 on failure
+ */
+int unsetenv_handler(char *command, char **arguments)
+{
+	(void) command;
+
+	if (arguments[1] == NULL) {
+		fprintf(stderr, "Usage: unsetenv VARIABLE\n");
+		return -1;
+	}
+
+	if (unsetenv(arguments[1]) == -1) {
+		perror("unsetenv");
+		return -1;
+	}
+
+	return 0;
+}
+
