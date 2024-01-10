@@ -1,0 +1,46 @@
+#include "shell.h"
+
+void replace_variables(char *command, char *modified_command, int *last_exit_status) {
+	int command_length = strlen(command);
+	int modified_index = 0;
+	int i = 0;
+	char *variable = NULL, *value = NULL;
+
+	while (i < command_length - 1 && modified_index < MAXIMUM_COMMAND_LENGTH - 1) {
+		if (command[i] == '$') {
+			if (command[i + 1] == '?') {
+				if (*last_exit_status == -1) {
+					fprintf(stderr, "Command execution failed\n");
+					exit(EXIT_FAILURE);
+				}
+				snprintf(modified_command + modified_index, MAXIMUM_COMMAND_LENGTH - modified_index, "%d", *last_exit_status);
+				modified_index = strlen(modified_command);
+				i += 2;
+			} else if (command[i + 1] == '$') {
+				snprintf(modified_command + modified_index, MAXIMUM_COMMAND_LENGTH - modified_index, "%d", getpid());
+				modified_index = strlen(modified_command);
+				i += 2;
+			} else {
+				int start = i + 1;
+				int length = 0;
+				while (i < command_length - 1 && command[i + 1] != ' ' && command[i + 1] != '$') {
+					i++;
+					length++;
+				}
+				variable = malloc(length + 1);
+				strncpy(variable, command + start, length);
+				variable[length] = '\0';
+
+				value = getenv(variable);
+				free(variable);
+				if (value != NULL) {
+					strncat(modified_command, value, MAXIMUM_COMMAND_LENGTH - modified_index - 1);
+					modified_index = strlen(modified_command);
+				}
+			}
+		} else {
+			modified_command[modified_index++] = command[i++];
+		}
+	}
+	modified_command[modified_index] = '\0';
+}

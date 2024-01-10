@@ -9,10 +9,11 @@
 int main(int argc, char **argv, char **envp)
 {
 	char *input = NULL, *comment_pos = NULL;
-	char modified_input[MAXIMUM_COMMAND_LENGTH] = {'\0'};
+	/*char modified_input[MAXIMUM_COMMAND_LENGTH] = {'\0'};*/
 	int last_exit_status = 0;
 	size_t buffer = 0;
 	ssize_t read = 0;
+	char *modified_input = NULL;
 	(void)envp;
 
 	if (argc >= 2)
@@ -44,8 +45,12 @@ int main(int argc, char **argv, char **envp)
 		if (comment_pos != NULL)
 			*comment_pos = '\0';
 		remove_quotes(input);
-		replace_variables(input, modified_input, &last_exit_status);
+		modified_input = handle_variables(input, &last_exit_status);
+		/*handle_variables(input, &last_exit_status, input);*/
+		/*replace_variables(input, modified_input, &last_exit_status);*/
 		tokenize_input(argv, modified_input, &last_exit_status);
+		free(modified_input); /* Free memory allocated in handle_variables */
+		modified_input = NULL;
 	}
 	if (input != NULL)
 		free(input), input = NULL;

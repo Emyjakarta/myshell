@@ -7,7 +7,8 @@
 int _exe_command_from_file(char **argv)
 {
 	char *_line = NULL, *comment_pos = NULL;
-	char modified_line[MAXIMUM_COMMAND_LENGTH];
+	/*char modified_line[MAXIMUM_COMMAND_LENGTH];*/
+	char *modified_line = NULL;
 	size_t _len = BUFFER_SIZE;
 	ssize_t _read;
 	FILE *_file = fopen(argv[1], "r");
@@ -36,7 +37,8 @@ int _exe_command_from_file(char **argv)
 		if (comment_pos != NULL)
 			*comment_pos = '\0';
 		remove_quotes(_line);
-		replace_variables(_line, modified_line, &last_exit_status);
+		modified_line = handle_variables(_line, &last_exit_status);
+		/*replace_variables(_line, modified_line, &last_exit_status);*/
 		tokenize_input(argv, modified_line, &last_exit_status);
 	}
 	if (_read == -1)

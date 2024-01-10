@@ -85,7 +85,8 @@ int execute_command(char **cmd, char **args);
 /*char *build_path(const char *_command);*/
 void build_path(const char *_command, char *_result, size_t result_size);
 int relative_path(char *cmd, char **args);
-void replace_variables(char* command, char* modified_command, int *last_exit_status);
+/*void replace_variables(char* command, char* modified_command, int *last_exit_status);*/
+char *handle_variables(char *command, int *last_exit_status);
 void tokenize_input(char **argv, char *input, int *last_exit_status);
 void tokenize_and_process_before_operator(const char *file_name, char *before_operator,
 		int *last_exit_status, char *current_operator);
@@ -113,4 +114,7 @@ void _safe_free(void **ptr);
 void trim_spaces(char *str);
 
 int _exe_command_from_file(char **argv);
+
+void itoa(size_t n, char *s);
+void _reverse(char *buffer, size_t len);
 #endif /*SHELL_H*/
