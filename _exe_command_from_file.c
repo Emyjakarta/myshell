@@ -40,6 +40,8 @@ int _exe_command_from_file(char **argv)
 		modified_line = handle_variables(_line, &last_exit_status);
 		/*replace_variables(_line, modified_line, &last_exit_status);*/
 		tokenize_input(argv, modified_line, &last_exit_status);
+		if (modified_line != NULL)
+			free(modified_line), modified_line = NULL;
 	}
 	if (_read == -1)
 	{

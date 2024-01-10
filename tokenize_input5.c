@@ -21,6 +21,7 @@ char *handle_variables(char *command, int *last_exit_status) {
 	if (result == NULL) {
 		/* Handle allocation failure*/
 		fprintf(stderr, "Memory allocation failed\n");
+		/*free(result), result = NULL;*/
 		exit(EXIT_FAILURE);
 	}
 
@@ -69,9 +70,9 @@ char *handle_variables(char *command, int *last_exit_status) {
 				/*strncpy(env_variable, command + i + 1, j - i - 1);
 				  env_variable[j - i - 1] = '\0';*/
 
-				printf("before calling getenv:\nenv_variable: %s\nenv_value: %s\n", env_variable, env_value);
+				/*printf("before calling getenv:\nenv_variable: %s\nenv_value: %s\n", env_variable, env_value);*/
 				env_value = getenv(env_variable);
-				printf("after calling getenv:\nenv_variable: %s\nenv_value: %s\n", env_variable, env_value);
+				/*printf("after calling getenv:\nenv_variable: %s\nenv_value: %s\n", env_variable, env_value);*/
 				if (env_value != NULL) {
 					value_len = strlen(env_value);
 					if (result_index + value_len >= MAXIMUM_COMMAND_LENGTH - 1) {

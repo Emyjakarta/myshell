@@ -48,6 +48,8 @@ void tokenize_input(char **argv, char *input, int *last_exit_status)
 			command_copy = single_command;
 		}
 	}
+	if (input != NULL)
+		free(input), input = NULL;
 }
 /**
  * process_commands_with_operators-process commands with operators
