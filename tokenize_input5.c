@@ -9,7 +9,7 @@
  * the @command is returned as received with no modifications
  */
 char *handle_variables(char *command, int *last_exit_status) {
-	char *result = malloc(MAXIMUM_COMMAND_LENGTH); /* Allocate memory for the result*/
+	char *result = calloc(MAXIMUM_COMMAND_LENGTH, sizeof(char)); /* Allocate memory for the result*/
 	size_t command_len = 0;
 	size_t result_index = 0;
 	int pid = 0;
@@ -54,7 +54,7 @@ char *handle_variables(char *command, int *last_exit_status) {
 					j++;
 				}
 
-				env_variable = malloc(j - i);
+				env_variable = calloc((j - i), sizeof(char));
 				if (env_variable == NULL) {
 					fprintf(stderr, "Memory allocation failed\n");
 					exit(EXIT_FAILURE);
