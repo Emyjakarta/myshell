@@ -71,7 +71,7 @@ void cleanup(OperatorInfo *operators)
  * @last_exit_status: last exit status
  * @current_operator: current operator
  */
-void tokenize_and_process_last_command(const char *file_name, char *after_operator,
+int tokenize_and_process_last_command(const char *file_name, char *after_operator,
 		int *last_exit_status, char *current_operator)
 {
 
@@ -81,12 +81,13 @@ void tokenize_and_process_last_command(const char *file_name, char *after_operat
 	int i;
 	char *command_args_op[MAX_COMMAND_ARGS];
 
-	if ((strcmp(current_operator, "&&") == 0 && *last_exit_status != 0) ||
+	/*if ((strcmp(current_operator, "&&") == 0 && *last_exit_status != 0) ||
 			(strcmp(current_operator, "||") == 0 && *last_exit_status == 0)) {
+		printf("inside last_command before free\n");
 		free(after_operator);
 		after_operator = NULL;
-		exit_handler(NULL, NULL); /*If logical condition met, exit the loop*/
-	}
+		exit_handler(NULL, NULL);*/ /*If logical condition met, exit the loop*/
+	/*}*/
 	trim_spaces(after_operator);
 	arg_token_op = strtok_r(after_operator, " \t", &saveptr2);
 	while (arg_token_op != NULL && arg_count_op < MAX_COMMAND_ARGS - 1)
@@ -119,4 +120,5 @@ void tokenize_and_process_last_command(const char *file_name, char *after_operat
 	arg_count_op = 0;
 	free(after_operator);
 	after_operator = NULL;
+	return (*last_exit_status);
 }

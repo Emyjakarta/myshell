@@ -15,10 +15,10 @@
 #include <errno.h>
 
 #define MAX_COMMAND_ARGS 500
-#define MAXIMUM_COMMAND_LENGTH 1024
+#define MAXIMUM_COMMAND_LENGTH 5120
 #define MAX_OPERATORS 100
-#define MAX_PATH_LENGTH 1024
-#define BUFFER_SIZE 1024
+#define MAX_PATH_LENGTH 5120
+#define BUFFER_SIZE 5120
 #define MAX_ALIASES 50
 #define MAX_ALIAS_LEN 100
 
@@ -92,7 +92,7 @@ void tokenize_and_process_before_operator(const char *file_name, char *before_op
 		int *last_exit_status, char *current_operator);
 void tokenize_and_process_after_operator(const char *file_name, char **after_operator,
 		int *last_exit_status, int *total_operators);
-void tokenize_and_process_last_command(const char *file_name, char *after_operator,
+int tokenize_and_process_last_command(const char *file_name, char *after_operator,
 		int *last_exit_status, char *current_operator);
 void tokenize_and_process_after_operator2(int *last_exit_status,
 		char **command_copy, OperatorInfo current_operator, char *after_operator);
@@ -102,7 +102,7 @@ void update_indices_pointers(int *operator_index,
 char *extract_before_operator(char **current_command, int operator_index);
 char *extract_after_operator(char **current_command,
 		int operator_index, char *operator_position, char *current_operator);
-void process_operator_occurrences(const char *file_name, int *total_operators, int *last_exit_status,
+int process_operator_occurrences(const char *file_name, int *total_operators, int *last_exit_status,
 		OperatorInfo current_operator, char *original_command_copy,
 		char *operator_position);
 void process_commands_with_operators(const char *file_name, OperatorInfo *operators,
