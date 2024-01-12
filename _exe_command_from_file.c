@@ -17,10 +17,10 @@ int _exe_command_from_file(char **argv)
 	if (_file == NULL)
 	{
 		/*if (fd == -1)
-		{*/
-			/* we couldn't open the file, let's clean and leave */
-			dprintf(2, "%s: 0: Can't open %s\n", argv[0], argv[1]);
-			return (127);
+		  {*/
+		/* we couldn't open the file, let's clean and leave */
+		dprintf(2, "%s: 0: Can't open %s\n", argv[0], argv[1]);
+		return (127);
 		/*}*/
 	}
 	_line = calloc(_len, sizeof(char));
@@ -38,10 +38,36 @@ int _exe_command_from_file(char **argv)
 			*comment_pos = '\0';
 		remove_quotes(_line);
 		modified_line = handle_variables(_line, &last_exit_status);
-		/*replace_variables(_line, modified_line, &last_exit_status);*/
+		if (strcmp(modified_line, "exit") == 0) {
+
+			if (modified_line != NULL)
+			{
+				free(modified_line); /* Free memory allocated in handle_variables */
+				modified_line = NULL;
+			}
+			if (_line != NULL) {
+				free(_line);
+				_line = NULL;
+			}
+			return exit_handler(NULL, NULL);
+		}
 		tokenize_input(argv, modified_line, &last_exit_status);
-		if (modified_line != NULL)
-			free(modified_line), modified_line = NULL;
+		if (modified_line != NULL) {
+			free(modified_line);
+			modified_line = NULL;
+		}
+		/*replace_variables(_line, modified_line, &last_exit_status);*/
+		/*if (strcmp(modified_line, "exit") == 0) {
+		  if (_line != NULL || modified_line != NULL) {
+		  free(modified_line), modified_line = NULL;
+		  free(_line);
+		  _line = NULL;
+		  }
+		  return exit_handler(NULL, NULL);
+		  }
+		  tokenize_input(argv, modified_line, &last_exit_status);
+		  if (modified_line != NULL)
+		  free(modified_line), modified_line = NULL;*/
 	}
 	if (_read == -1)
 	{
@@ -52,6 +78,7 @@ int _exe_command_from_file(char **argv)
 		}
 	}
 	fclose(_file);
-	free(_line);
+	free(modified_line), modified_line = NULL;
+	free(_line), _line = NULL;
 	return (0);
 }

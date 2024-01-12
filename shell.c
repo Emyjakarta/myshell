@@ -19,6 +19,8 @@ int main(int argc, char **argv, char **envp)
 	if (argc >= 2)
 	{
 		last_exit_status = _exe_command_from_file(argv);
+		free(modified_input), modified_input = NULL;
+		free(input), input = NULL;
 		return (last_exit_status);
 	}
 	while (1)
@@ -48,10 +50,22 @@ int main(int argc, char **argv, char **envp)
 		modified_input = handle_variables(input, &last_exit_status);
 		/*handle_variables(input, &last_exit_status, input);*/
 		/*replace_variables(input, modified_input, &last_exit_status);*/
+		if (strcmp(modified_input, "exit") == 0) {
+
+			if (modified_input != NULL)
+			{
+				free(modified_input); /* Free memory allocated in handle_variables */
+				modified_input = NULL;
+			}
+			if (input != NULL) {
+				free(input);
+				input = NULL;
+			}
+			return exit_handler(NULL, NULL);
+		}
 		tokenize_input(argv, modified_input, &last_exit_status);
-		if (modified_input != NULL)
-		{
-			free(modified_input); /* Free memory allocated in handle_variables */
+		if (modified_input != NULL) {
+			free(modified_input);
 			modified_input = NULL;
 		}
 	}
