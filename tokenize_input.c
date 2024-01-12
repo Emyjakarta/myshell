@@ -40,6 +40,7 @@ void tokenize_input(char **argv, char *input, int *last_exit_status)
 		{
 			process_commands_with_operators(argv[0], operators, &(*last_exit_status),
 					&command_copy, &current_operator);
+			/*free(command_copy), command_copy = NULL;*/
 		}
 		single_command = strtok_r(NULL, delim, &saveptr1);
 		index++;
@@ -48,8 +49,6 @@ void tokenize_input(char **argv, char *input, int *last_exit_status)
 			command_copy = single_command;
 		}
 	}
-	if (input != NULL)
-		free(input), input = NULL;
 }
 /**
  * process_commands_with_operators-process commands with operators
@@ -128,7 +127,8 @@ void process_operator_occurrences(const char *file_name, int *total_operators, i
 			free(after_operator);
 			after_operator = NULL;
 		}
-		return;
+		exit_handler(NULL, NULL);
+		/*return;*/
 	}
 	tokenize_and_process_last_command(file_name, after_operator,
 			&(*last_exit_status), current_operator.operator);

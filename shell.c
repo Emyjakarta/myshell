@@ -49,11 +49,11 @@ int main(int argc, char **argv, char **envp)
 		/*handle_variables(input, &last_exit_status, input);*/
 		/*replace_variables(input, modified_input, &last_exit_status);*/
 		tokenize_input(argv, modified_input, &last_exit_status);
-		/*if (modified_input != NULL)
+		if (modified_input != NULL)
 		{
-			free(modified_input);*/ /* Free memory allocated in handle_variables */
-			/*modified_input = NULL;
-		}*/
+			free(modified_input); /* Free memory allocated in handle_variables */
+			modified_input = NULL;
+		}
 	}
 	if (modified_input != NULL)
 	{

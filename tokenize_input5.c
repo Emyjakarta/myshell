@@ -85,7 +85,8 @@ char *handle_variables(char *command, int *last_exit_status) {
 					strcat(result, "$"); /* Append $ if variable not found*/
 					result_index++;
 				}
-				free(env_variable);
+				if (env_variable != NULL)
+					free(env_variable), env_variable = NULL;
 				i = j - 1;
 			}
 		} else {

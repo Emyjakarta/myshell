@@ -41,7 +41,8 @@ int builtin_handler(char *command, char **arguments)
 int exit_handler(char *command, char **arguments)
 {
 	(void) arguments;
-
+	/*if (arguments[0] != NULL)
+	  free(arguments[0]), arguments[0] = NULL;*/
 	free(command);
 	command = NULL;
 	exit(EXIT_SUCCESS);

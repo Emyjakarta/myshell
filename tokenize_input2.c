@@ -95,6 +95,11 @@ void tokenize_and_process_last_command(const char *file_name, char *after_operat
 		if (command_args_op[arg_count_op] == NULL)
 		{
 			perror("strdup");
+			for (i = 0; i < arg_count_op; i++)
+			{
+				free(command_args_op[i]);
+				command_args_op[i] = NULL;
+			}
 			free(after_operator);
 			after_operator = NULL;
 			exit(EXIT_FAILURE);
