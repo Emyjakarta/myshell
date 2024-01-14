@@ -36,7 +36,7 @@ int is_command_in_path(const char *command, char **arguments, int *last_exit_sta
 				printf("full_path during check: %s\n", full_path);
 				modified_command = full_path;
 				*last_exit_status = execute_command(&modified_command, arguments);
-				return (*last_exit_status); /* Command found in PATH */
+				/*return (*last_exit_status);*/ /* Command found in PATH */
 			}
 		}
 		printf("dir before moving to next dir: %s\n", dir);

@@ -44,10 +44,19 @@ int execute_single_command(const char *file_name, char *command, char **argument
 	b_result = builtin_handler(command, arguments);
 	if (b_result == 1)
 	{
-		if (is_command_in_path(command, arguments, &(*last_exit_status)) == 0)
+		is_command_in_path(command, arguments, &(*last_exit_status));
+		if (*last_exit_status == 0 && access(command, F_OK) == 0)
 		{
-			return (*last_exit_status);
+			if (command != NULL && (arguments[0][0] == '.' || (strcmp(arguments[0], "..") == 0)) && access(command, F_OK) != 0)
+			{
+				dprintf(STDERR_FILENO, "%s: %lu: %s: not found\n", file_name, err_count, arguments[0]);
+				err_count++;
+				*last_exit_status = 127;
+				return (*last_exit_status);
+			}
 		}
+		/*else
+			return (*last_exit_status);*/
 		if (command != NULL && *arguments[0] != '/')
 		{
 			/*if (is_command_in_path(command, arguments, &(*last_exit_status)) != 0)
@@ -85,7 +94,7 @@ int execute_single_command(const char *file_name, char *command, char **argument
 		}
 		else
 		{
-			if (command != NULL && (*arguments[0] == '.' || *arguments[0] == "..") && access(command, F_OK) != 0)
+			if (command != NULL && (arguments[0][0] == '.' || (strcmp(arguments[0], "..") == 0)) && access(command, F_OK) != 0)
 			{
 				dprintf(STDERR_FILENO, "%s: %lu: %s: not found\n", file_name, err_count, arguments[0]);
 				err_count++;
