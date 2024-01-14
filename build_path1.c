@@ -14,7 +14,7 @@ int is_command_in_path(const char *command, char **arguments, int *last_exit_sta
 	if (path == NULL)
 	{
 		/* Error fetching path */
-		return 0;
+		return 1;
 	}
 
 	strncpy(copy_path, path, PATH_MAX);
@@ -29,6 +29,7 @@ int is_command_in_path(const char *command, char **arguments, int *last_exit_sta
 			strcpy(full_path, dir);
 			full_path[dir_len] = '/';
 			strcpy(full_path + dir_len + 1, command);
+			printf("full_path before access check: %s\n", full_path);
 
 			if (access(full_path, F_OK) == 0)
 			{
@@ -38,10 +39,11 @@ int is_command_in_path(const char *command, char **arguments, int *last_exit_sta
 				return (*last_exit_status); /* Command found in PATH */
 			}
 		}
+		printf("dir before moving to next dir: %s\n", dir);
 		dir = strtok(NULL, ":");
 	}
 
-	return 0; /* Command not found in PATH */
+	return 1; /* Command not found in PATH */
 }
 /**
  * build_path-build path for ordinary commands like ls

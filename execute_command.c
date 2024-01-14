@@ -37,25 +37,31 @@ int execute_single_command(const char *file_name, char *command, char **argument
 	int b_result = 0;
 	static size_t err_count = 1;
 	char command_buffer[PATH_MAX];
-	char *modified_command = NULL;
+	/*char *modified_command = NULL;*/
 	(void) logical_operator;
 
 	command_buffer[0] = '\0'; /* Initialize buffer */
 	b_result = builtin_handler(command, arguments);
 	if (b_result == 1)
 	{
-		if (command != NULL && *arguments[0] != '/' && access(command, F_OK) != 0)
+		if (is_command_in_path(command, arguments, &(*last_exit_status)) == 0)
 		{
-			if (is_command_in_path(command, arguments, &(*last_exit_status)) != 1)
+			return (*last_exit_status);
+		}
+		if (command != NULL && *arguments[0] != '/')
+		{
+			/*if (is_command_in_path(command, arguments, &(*last_exit_status)) != 0)
 			{
 				*last_exit_status = execute_command(&command, arguments);
 				return (*last_exit_status);
-			}
-			else
-			{
+			}*/
+			
+			
 				build_path(command, command_buffer, PATH_MAX);
-				if (command_buffer[0] == '\0')
+				if (command_buffer[0] == '\0' && access(command, F_OK) != 0)
 				{
+					printf("command after build_path during check: %s\n", command);
+					printf("command_buffer after build_path during check: %s\n", command_buffer);
 					dprintf(STDERR_FILENO, "%s: %lu: %s: not found\n", file_name, err_count,
 							arguments[0]);
 					err_count++;
@@ -63,12 +69,12 @@ int execute_single_command(const char *file_name, char *command, char **argument
 					return (*last_exit_status);
 					/*exit(127);*/
 				}
-				modified_command = command_buffer;
-				printf("command after assignment: %s\n", command);
-				printf("modified_command after assignment: %s\n", modified_command);
+				/*modified_command = command_buffer;*/
+				/*printf("command after build_path: %s\n", command);
+				printf("command_buffer after build_path: %s\n", command_buffer);
 				*last_exit_status = execute_command(&modified_command, arguments);
-				return (*last_exit_status);
-			}
+				return (*last_exit_status);*/
+			
 			/*else
 				modified_command = command;
 			printf("command after assignment: %s\n", command);
@@ -79,7 +85,14 @@ int execute_single_command(const char *file_name, char *command, char **argument
 		}
 		else
 		{
-			if (command != NULL && *arguments[0] == '/' && access(command, F_OK) != 0)
+			if (command != NULL && (*arguments[0] == '.' || *arguments[0] == "..") && access(command, F_OK) != 0)
+			{
+				dprintf(STDERR_FILENO, "%s: %lu: %s: not found\n", file_name, err_count, arguments[0]);
+				err_count++;
+				*last_exit_status = 127;
+				return (*last_exit_status);
+			}
+			else if (command != NULL && *arguments[0] == '/' && access(command, F_OK) != 0)
 			{
 				dprintf(STDERR_FILENO, "%s: %lu: %s: not found\n", file_name, err_count,
 						arguments[0]);
@@ -88,8 +101,9 @@ int execute_single_command(const char *file_name, char *command, char **argument
 				*last_exit_status = 127;
 				return (*last_exit_status);
 			}
+			*last_exit_status = execute_command(&command, arguments);
 		}
-		*last_exit_status = execute_command(&command, arguments);
+		/*last_exit_status = execute_command(&command, arguments);*/
 	}
 	return (*last_exit_status);
 }
