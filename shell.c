@@ -31,7 +31,8 @@ int main(int argc, char **argv, char **envp)
 		{
 			if (input != NULL)
 				free(input), input = NULL;
-			return (exit_handler(NULL, NULL));
+			return (last_exit_status);
+			/*return (exit_handler(NULL, NULL));*/
 		}
 		else if (read == 0)
 		{

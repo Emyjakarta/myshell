@@ -37,6 +37,7 @@ int execute_single_command(const char *file_name, char *command, char **argument
 	int b_result = 0;
 	static size_t err_count = 1;
 	char command_buffer[PATH_MAX];
+	char *modified_command = NULL;
 	(void) logical_operator;
 
 	command_buffer[0] = '\0'; /* Initialize buffer */
@@ -51,11 +52,14 @@ int execute_single_command(const char *file_name, char *command, char **argument
 				dprintf(STDERR_FILENO, "%s: %lu: %s: not found\n", file_name, err_count,
 						                        arguments[0]);
 				err_count++;
-				/*last_exit_status = 127;
-				return (*last_exit_status);*/
-				exit(127);
+				*last_exit_status = 127;
+				return (*last_exit_status);
+				/*exit(127);*/
 			}
-			command = command_buffer; /* Update command to point to the result */
+			modified_command = command_buffer;
+			*last_exit_status = execute_command(&modified_command, arguments);
+			return (*last_exit_status);
+			/*command = command_buffer;*/ /* Update command to point to the result */
 		}
 		else
 		{
@@ -64,14 +68,16 @@ int execute_single_command(const char *file_name, char *command, char **argument
 				dprintf(STDERR_FILENO, "%s: %lu: %s: not found\n", file_name, err_count,
 						arguments[0]);
 				err_count++;
-				exit(127);
+				/*exit(127);*/
+				*last_exit_status = 127;
+				return (*last_exit_status);
 			}
 		}
 		*last_exit_status = execute_command(&command, arguments);
 	}
 	return (*last_exit_status);
 }
-/**
+/***last_exit_status = execute_command(&command, arguments);
  * execute_command-execute command
  * @cmd: command
  * @args: arguments
