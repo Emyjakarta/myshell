@@ -30,23 +30,16 @@ int is_command_in_path(const char *command, char **arguments, int *last_exit_sta
 			strcpy(full_path, dir);
 			full_path[dir_len] = '/';
 			strcpy(full_path + dir_len + 1, command);
-			printf("full_path before access check: %s\n", full_path);
-
 			if (access(full_path, F_OK) == 0)
 			{
-				printf("full_path during check: %s\n", full_path);
 				modified_command = full_path;
 				*last_exit_status = execute_command(&modified_command, arguments);
-				printf("found\n");
 				return (*last_exit_status); /* Command found in PATH */
 			}
 		}
-		printf("dir before moving to next dir: %s\n", dir);
 		dir = strtok(NULL, ":");
 	}
 	*last_exit_status = 1;
-	printf("command not found\n");
-	printf("last_exit_status just after printing not found: %d\n", *last_exit_status);
 	return (*last_exit_status); /* Command not found in PATH */
 }
 /**
@@ -66,7 +59,6 @@ void build_path(const char *_command, char *_result, size_t result_size)
 
 	if (_path == NULL)
 	{
-		/*fprintf(stderr, "Error: Unable to fetch path\n");*/
 		_result[0] = '\0';
 		return;
 	}
