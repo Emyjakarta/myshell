@@ -7,7 +7,6 @@
 int _exe_command_from_file(char **argv)
 {
 	char *_line = NULL, *comment_pos = NULL;
-	/*char modified_line[MAXIMUM_COMMAND_LENGTH];*/
 	char *modified_line = NULL;
 	size_t _len = BUFFER_SIZE;
 	ssize_t _read;
@@ -16,12 +15,9 @@ int _exe_command_from_file(char **argv)
 
 	if (_file == NULL)
 	{
-		/*if (fd == -1)
-		  {*/
 		/* we couldn't open the file, let's clean and leave */
 		dprintf(2, "%s: 0: Can't open %s\n", argv[0], argv[1]);
 		return (127);
-		/*}*/
 	}
 	_line = calloc(_len, sizeof(char));
 	if (_line == NULL)
@@ -56,18 +52,6 @@ int _exe_command_from_file(char **argv)
 			free(modified_line);
 			modified_line = NULL;
 		}
-		/*replace_variables(_line, modified_line, &last_exit_status);*/
-		/*if (strcmp(modified_line, "exit") == 0) {
-		  if (_line != NULL || modified_line != NULL) {
-		  free(modified_line), modified_line = NULL;
-		  free(_line);
-		  _line = NULL;
-		  }
-		  return exit_handler(NULL, NULL);
-		  }
-		  tokenize_input(argv, modified_line, &last_exit_status);
-		  if (modified_line != NULL)
-		  free(modified_line), modified_line = NULL;*/
 	}
 	if (_read == -1)
 	{

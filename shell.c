@@ -9,7 +9,6 @@
 int main(int argc, char **argv, char **envp)
 {
 	char *input = NULL, *comment_pos = NULL;
-	/*char modified_input[MAXIMUM_COMMAND_LENGTH] = {'\0'};*/
 	int last_exit_status = 0;
 	size_t buffer = 0;
 	ssize_t read = 0;
@@ -32,7 +31,6 @@ int main(int argc, char **argv, char **envp)
 			if (input != NULL)
 				free(input), input = NULL;
 			return (last_exit_status);
-			/*return (exit_handler(NULL, NULL));*/
 		}
 		else if (read == 0)
 		{
@@ -49,8 +47,6 @@ int main(int argc, char **argv, char **envp)
 			*comment_pos = '\0';
 		remove_quotes(input);
 		modified_input = handle_variables(input, &last_exit_status);
-		/*handle_variables(input, &last_exit_status, input);*/
-		/*replace_variables(input, modified_input, &last_exit_status);*/
 		if (strcmp(modified_input, "exit") == 0) {
 
 			if (modified_input != NULL)

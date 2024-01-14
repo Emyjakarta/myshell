@@ -23,7 +23,6 @@ void tokenize_input(char **argv, char *input, int *last_exit_status)
 	command_copy = single_command;
 	if (command_copy == NULL)
 	{
-		/*perror("command_copy is not NULL-terminated\n");*/
 		return;
 	}
 	obtain_operators(&command_copy, operators, MAX_OPERATORS);
@@ -40,7 +39,6 @@ void tokenize_input(char **argv, char *input, int *last_exit_status)
 		{
 			process_commands_with_operators(argv[0], operators, &(*last_exit_status),
 					&command_copy, &current_operator);
-			/*free(command_copy), command_copy = NULL;*/
 		}
 		single_command = strtok_r(NULL, delim, &saveptr1);
 		index++;
@@ -124,15 +122,10 @@ int process_operator_occurrences(const char *file_name, int *total_operators, in
 	{
 		if (after_operator != NULL)
 		{
-			/*printf("after_operator(last_command) before free: %s\n", after_operator);*/
 			free(after_operator);
 			after_operator = NULL;
-			/*free(original_command_copy);
-			original_command_copy = NULL;*/
 		}
 		return (*last_exit_status);
-		/*exit_handler(NULL, NULL);*/
-		/*return;*/
 	}
 	*last_exit_status = tokenize_and_process_last_command(file_name, after_operator,
 			&(*last_exit_status), current_operator.operator);
@@ -218,16 +211,6 @@ void tokenize_and_process_after_operator(const char *file_name, char **after_ope
 	operator_position = strstr(*after_operator, current_operator.operator);
 	if (sum_operators != 0)
 	{
-		/*if ((strcmp(current_operator.operator, "&&") == 0
-					&& *last_exit_status != 0) ||
-				(strcmp(current_operator.operator, "||") == 0
-				 && *last_exit_status == 0))
-		{
-			printf("after_operator before free: %s\n", *after_operator);
-			free(*after_operator);
-			*after_operator = NULL;
-			exit_handler(NULL, NULL);*/ /*If logical condition met, exit the loop*/
-		/*}*/
 		process_operator_occurrences(file_name, &(*total_operators),
 				&(*last_exit_status), current_operator,
 				(*after_operator), operator_position);
