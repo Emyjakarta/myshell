@@ -83,6 +83,7 @@ int execute_single_command(const char *file_name, char *command, char **argument
 		int *last_exit_status, char *logical_operator);
 int execute_command(char **cmd, char **args);
 /*char *build_path(const char *_command);*/
+int is_command_in_path(const char *command, char **arguments, int *last_exit_status);
 void build_path(const char *_command, char *_result, size_t result_size);
 int relative_path(char *cmd, char **args);
 /*void replace_variables(char* command, char* modified_command, int *last_exit_status);*/
