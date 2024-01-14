@@ -69,7 +69,7 @@ char *handle_variables(char *command, int *last_exit_status) {
 				if (env_value != NULL) {
 					value_len = strlen(env_value);
 					if (result_index + value_len >= MAXIMUM_COMMAND_LENGTH - 1) {
-						fprintf(stderr, "Result exceeds maximum command length\n");
+						/*fprintf(stderr, "Result exceeds maximum command length\n");*/
 						exit(EXIT_FAILURE);
 					}
 					strcat(result, env_value);

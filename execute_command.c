@@ -76,7 +76,6 @@ int execute_single_command(const char *file_name, char *command, char **argument
 			else
 			{
 				actual_command = arguments[0] + 2;  /* Skip the "./" prefix */
-				printf("actual_command after assignment: %s\n", actual_command);
 				*last_exit_status = execute_command(&actual_command, arguments);
 				return (*last_exit_status);
 			}
